@@ -14,10 +14,16 @@ namespace TileTest
         public Point CorrectGridPosition { get; set; }
         public int GridSize { get; set; }
         public bool IsCurrentlySwappable { get; set; }
+        public Rectangle TileBounds { get; set; }
 
         public void DrawIt(SpriteBatch spriteBatch)
         {
         }
+
+        public void UpdateIt(GameTime gameTime)
+        {
+        }
+
         public EmptyTile(Point correctPosition, int gridSize)
         {
             this.CorrectGridPosition = correctPosition;

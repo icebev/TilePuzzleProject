@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,6 +21,7 @@ namespace TileTest
 
         public Texture2D m_puzzleImage;
 
+        private readonly Random m_random;
         public Point BlankTilePosition => this.FindBlankTile();
         public TileManager(int gridSize, Texture2D picture)
         {
@@ -27,6 +29,8 @@ namespace TileTest
             //this.m_tileList = new List<IGridMember>();
             this.m_tilesArray = new IGridMember[this.m_gridSize, this.m_gridSize];
             this.m_puzzleImage = picture;
+
+            this.m_random = new Random();
         }
 
         public void GenerateTiles()
@@ -49,8 +53,12 @@ namespace TileTest
                     }
                 }
             }
-
-            
+        }
+        public void UpdateTiles(GameTime gameTime)
+        {
+            foreach (IGridMember tile in this.m_tilesArray)
+                if (tile.GetType().ToString() == "TileTest.Tile")
+                        tile.UpdateIt(gameTime);
         }
         public void DrawTiles(SpriteBatch spriteBatch)
         {
@@ -102,12 +110,63 @@ namespace TileTest
         public void SwapTile(IGridMember tileToSwap)
         {
             Point newEmptyPosition = new Point(tileToSwap.CurrentGridPosition.X, tileToSwap.CurrentGridPosition.Y);
+
             tileToSwap.CurrentGridPosition = this.FindBlankTile();
             this.m_tilesArray[tileToSwap.CurrentGridPosition.X, tileToSwap.CurrentGridPosition.Y] = tileToSwap;
 
-            this.m_tilesArray[newEmptyPosition.X, newEmptyPosition.Y] = new EmptyTile(new Point(this.m_gridSize - 1, this.m_gridSize - 1), this.m_gridSize);
+            EmptyTile newEmptyTile = new EmptyTile(new Point(this.m_gridSize - 1, this.m_gridSize - 1), this.m_gridSize);
+            newEmptyTile.CurrentGridPosition = newEmptyPosition;
+
+            this.m_tilesArray[newEmptyPosition.X, newEmptyPosition.Y] = newEmptyTile;
 
             this.DetermineSwappableTiles();
+        }
+
+        public void CheckForTileClick(MouseState currentMouseState, MouseState previousMouseState)
+        {
+            foreach (IGridMember tile in this.m_tilesArray)
+            {
+                if (tile.IsCurrentlySwappable && tile.GetType().ToString() == "TileTest.Tile")
+                {
+                    if (tile.TileBounds.Contains(currentMouseState.Position) 
+                        && currentMouseState.LeftButton == ButtonState.Pressed 
+                        && previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        this.SwapTile(tile);
+                    }
+                }
+            }
+            
+        }
+
+        public void JumbleTiles()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                int randX = this.m_random.Next(0, this.m_gridSize);
+                int randY = this.m_random.Next(0, this.m_gridSize);
+                
+                // prevent unsolvable puzzle by only allowing adjacent swaps during jumble process
+                IGridMember TileToSwap = this.m_tilesArray[randX, randY];
+                if (TileToSwap.IsCurrentlySwappable)
+                    SwapTile(this.m_tilesArray[randX, randY]);
+                else
+                    i--;
+            }
+        }
+
+        public bool CheckPuzzleCompletion()
+        {
+            foreach (IGridMember tile in this.m_tilesArray)
+            {
+                if (tile.CurrentGridPosition != tile.CorrectGridPosition)
+                {
+                    return false;
+                }
+            }
+            Debug.WriteLine("Congratulations, you completed the puzzle!");
+            return true;
+
         }
     }
 }

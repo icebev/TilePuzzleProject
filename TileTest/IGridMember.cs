@@ -12,8 +12,12 @@ namespace TileTest
     {
         Point CurrentGridPosition { get; set; }
         Point CorrectGridPosition { get; set; }
+
+        Rectangle TileBounds { get; }
         bool IsCurrentlySwappable { get; set; }
         int GridSize { get; set; }
+
+        void UpdateIt(GameTime gameTime);
         void DrawIt(SpriteBatch spriteBatch);
     }
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TileTest/Content/tinybones.png</SourceFile>
+  <SourceFile>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/tinybones.png</SourceFile>
   <SourceTime>2021-12-05T17:13:16.5531465+00:00</SourceTime>
-  <DestFile>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TileTest/Content/bin/DesktopGL/tinybones.xnb</DestFile>
-  <DestTime>2021-12-05T17:15:18.887119+00:00</DestTime>
+  <DestFile>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/bin/DesktopGL/tinybones.xnb</DestFile>
+  <DestTime>2021-12-06T14:34:50.8081633+00:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2017-03-01T15:05:36+00:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

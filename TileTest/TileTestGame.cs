@@ -16,7 +16,13 @@ namespace TileTest
 
         TileManager m_tileManager;
 
+        private KeyboardState m_currentKeyboardState;
         private KeyboardState m_previousKeyboardState;
+
+        private MouseState m_currentMouseState;
+        private MouseState m_previousMouseState;
+        
+
 
         public TileTestGame()
         {
@@ -54,11 +60,12 @@ namespace TileTest
             // TODO: use this.Content to load your game content here
             this.m_testSprite = this.Content.Load<Texture2D>("tinybones");
 
-            this.m_tileManager = new TileManager(3, this.m_testSprite);
+            this.m_tileManager = new TileManager(4, this.m_testSprite);
             this.m_tileManager.GenerateTiles();
             Point emptyTilePosition = this.m_tileManager.FindBlankTile();
             this.m_tileManager.DetermineSwappableTiles();
 
+            this.m_tileManager.JumbleTiles();
 
         }
 
@@ -78,14 +85,24 @@ namespace TileTest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            this.m_currentKeyboardState = Keyboard.GetState();
+            this.m_currentMouseState = Mouse.GetState();
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || this.m_currentKeyboardState.IsKeyDown(Keys.Escape))
                 Exit();
 
             // TODO: Add your update logic here
-            if (Keyboard.GetState().IsKeyDown(Keys.Up) && !this.m_previousKeyboardState.IsKeyDown(Keys.Up))
+            if (this.m_currentKeyboardState.IsKeyDown(Keys.Up) && !this.m_previousKeyboardState.IsKeyDown(Keys.Up))
                 this.m_tileManager.SwapTile(this.m_tileManager.m_tilesArray[2, 1]);
 
+            this.m_tileManager.CheckForTileClick(this.m_currentMouseState, this.m_previousMouseState);
+
             this.m_previousKeyboardState = Keyboard.GetState();
+            this.m_previousMouseState = Mouse.GetState();
+
+            this.m_tileManager.UpdateTiles(gameTime);
+            this.m_tileManager.CheckPuzzleCompletion();
+
             base.Update(gameTime);
         }
 
