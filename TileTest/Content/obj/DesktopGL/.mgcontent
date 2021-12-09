@@ -4,6 +4,10 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/tinybones.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/puzzles/tinybones.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/fonts/bahnschrift.spritefont</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/audio/slide.mp3</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/ancientrock.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/tileshadow.png</File>
   </SourceFiles>
 </SourceFileCollection>

@@ -28,7 +28,6 @@ C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzle
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\libSDL2-2.0.0.dylib
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\libopenal.1.dylib
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\MonoGame.Framework.dll.config
-C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\tinybones.xnb
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\TileTest.exe
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\TileTest.pdb
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\MonoGame.Framework.dll
@@ -36,3 +35,8 @@ C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzle
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\obj\Debug\TileTest.csproj.CoreCompileInputs.cache
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\obj\Debug\TileTest.exe
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\obj\Debug\TileTest.pdb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\puzzles\tinybones.xnb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\fonts\bahnschrift.xnb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\audio\slide.xnb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\ancientrock.xnb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\tileshadow.xnb

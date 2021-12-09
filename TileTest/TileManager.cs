@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -20,15 +21,23 @@ namespace TileTest
         public IGridMember[,] m_tilesArray;
 
         public Texture2D m_puzzleImage;
+        public Texture2D m_tileShadow;
+        private SoundEffect m_tileSlideSfx;
+        private bool m_shouldPlaySfx;
+
+        private SpriteFont m_font;
 
         private readonly Random m_random;
         public Point BlankTilePosition => this.FindBlankTile();
-        public TileManager(int gridSize, Texture2D picture)
+        public TileManager(int gridSize, Texture2D picture, SoundEffect slidesfx, SpriteFont font, Texture2D tileshadow)
         {
             this.m_gridSize = gridSize;
             //this.m_tileList = new List<IGridMember>();
             this.m_tilesArray = new IGridMember[this.m_gridSize, this.m_gridSize];
             this.m_puzzleImage = picture;
+            this.m_tileShadow = tileshadow;
+            this.m_tileSlideSfx = slidesfx;
+            this.m_font = font;
 
             this.m_random = new Random();
         }
@@ -41,7 +50,7 @@ namespace TileTest
             {
                 for (int y = 0; y < this.m_gridSize; y++)
                 {
-                    Tile newTile = new Tile(new Point(x, y), this.m_puzzleImage, this.m_gridSize);
+                    Tile newTile = new Tile(new Point(x, y), this.m_puzzleImage, this.m_gridSize, this.m_font, this.m_tileShadow);
                     if (!(x == maxArrayValue && y == maxArrayValue))
                     {
                         //this.m_tileList.Add(newTile);
@@ -109,6 +118,8 @@ namespace TileTest
 
         public void SwapTile(IGridMember tileToSwap)
         {
+            if (this.m_shouldPlaySfx)
+                this.m_tileSlideSfx.Play();
             Point newEmptyPosition = new Point(tileToSwap.CurrentGridPosition.X, tileToSwap.CurrentGridPosition.Y);
 
             tileToSwap.CurrentGridPosition = this.FindBlankTile();
@@ -138,10 +149,11 @@ namespace TileTest
             }
             
         }
-
+        
         public void JumbleTiles()
         {
-            for (int i = 0; i < 100; i++)
+            this.m_shouldPlaySfx = false;
+            for (int i = 0; i < 1000; i++)
             {
                 int randX = this.m_random.Next(0, this.m_gridSize);
                 int randY = this.m_random.Next(0, this.m_gridSize);
@@ -149,10 +161,11 @@ namespace TileTest
                 // prevent unsolvable puzzle by only allowing adjacent swaps during jumble process
                 IGridMember TileToSwap = this.m_tilesArray[randX, randY];
                 if (TileToSwap.IsCurrentlySwappable)
-                    SwapTile(this.m_tilesArray[randX, randY]);
+                    this.SwapTile(this.m_tilesArray[randX, randY]);
                 else
                     i--;
             }
+            this.m_shouldPlaySfx = true;
         }
 
         public bool CheckPuzzleCompletion()

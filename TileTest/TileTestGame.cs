@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -12,10 +13,15 @@ namespace TileTest
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Texture2D m_testSprite;
+        Texture2D m_testSprite; 
+        Texture2D m_backgroundTexture;
+        private Texture2D m_tileShadowTexture;
+        SoundEffect m_tileSlideSfx;
+        public SpriteFont m_bahnschriftFont;
 
         TileManager m_tileManager;
 
+        
         private KeyboardState m_currentKeyboardState;
         private KeyboardState m_previousKeyboardState;
 
@@ -58,9 +64,13 @@ namespace TileTest
             this.spriteBatch = new SpriteBatch(this.GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            this.m_testSprite = this.Content.Load<Texture2D>("tinybones");
+            this.m_testSprite = this.Content.Load<Texture2D>("textures/puzzles/tinybones");
+            this.m_backgroundTexture = this.Content.Load<Texture2D>("textures/ancientrock");
+            this.m_tileShadowTexture = this.Content.Load<Texture2D>("textures/tileshadow");
+            this.m_tileSlideSfx = this.Content.Load<SoundEffect>("audio/slide");
+            this.m_bahnschriftFont = this.Content.Load<SpriteFont>("fonts/bahnschrift");
 
-            this.m_tileManager = new TileManager(4, this.m_testSprite);
+            this.m_tileManager = new TileManager(3, this.m_testSprite, this.m_tileSlideSfx, this.m_bahnschriftFont, this.m_tileShadowTexture);
             this.m_tileManager.GenerateTiles();
             Point emptyTilePosition = this.m_tileManager.FindBlankTile();
             this.m_tileManager.DetermineSwappableTiles();
@@ -89,7 +99,7 @@ namespace TileTest
             this.m_currentMouseState = Mouse.GetState();
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || this.m_currentKeyboardState.IsKeyDown(Keys.Escape))
-                Exit();
+                this.Exit();
 
             // TODO: Add your update logic here
             if (this.m_currentKeyboardState.IsKeyDown(Keys.Up) && !this.m_previousKeyboardState.IsKeyDown(Keys.Up))
@@ -116,6 +126,7 @@ namespace TileTest
 
             // TODO: Add your drawing code here
             this.spriteBatch.Begin();
+            this.spriteBatch.Draw(this.m_backgroundTexture, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
             //this.spriteBatch.Draw(this.m_testSprite, new Rectangle(0, 0, 500, 500), Color.White);
             this.m_tileManager.DrawTiles(this.spriteBatch);
             this.spriteBatch.End();
