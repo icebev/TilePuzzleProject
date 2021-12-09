@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 
 namespace TileTest
 {
@@ -15,13 +17,19 @@ namespace TileTest
 
         Texture2D m_testSprite; 
         Texture2D m_backgroundTexture;
+
+        List<Texture2D> m_puzzleTextures;
+        List<String> m_filenames;
+
+
         private Texture2D m_tileShadowTexture;
         SoundEffect m_tileSlideSfx;
         public SpriteFont m_bahnschriftFont;
 
         TileManager m_tileManager;
 
-        
+        Random m_random;
+
         private KeyboardState m_currentKeyboardState;
         private KeyboardState m_previousKeyboardState;
 
@@ -64,7 +72,13 @@ namespace TileTest
             this.spriteBatch = new SpriteBatch(this.GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            this.m_testSprite = this.Content.Load<Texture2D>("textures/puzzles/tinybones");
+            this.m_filenames = new List<string> { "accursed", "tinybones", "building", "archfiend", "glorybringer", "kefnet", "mightyleap", "oketra", "sunset" };
+            this.m_puzzleTextures = LoadPuzzleImages();
+            this.m_random = new Random();
+
+            int textureRandomiser = this.m_random.Next(0, this.m_filenames.Count);
+
+            this.m_testSprite = this.m_puzzleTextures[textureRandomiser];
             this.m_backgroundTexture = this.Content.Load<Texture2D>("textures/ancientrock");
             this.m_tileShadowTexture = this.Content.Load<Texture2D>("textures/tileshadow");
             this.m_tileSlideSfx = this.Content.Load<SoundEffect>("audio/slide");
@@ -77,6 +91,17 @@ namespace TileTest
 
             this.m_tileManager.JumbleTiles();
 
+        }
+        public List<Texture2D> LoadPuzzleImages()
+        {
+            List<Texture2D> PuzzleImageList = new List<Texture2D>();
+
+            foreach (String filename in this.m_filenames)
+            {
+                Texture2D newTexture = this.Content.Load<Texture2D>("textures/puzzles/" + filename);
+                PuzzleImageList.Add(newTexture);
+            }
+            return PuzzleImageList;
         }
 
         /// <summary>
@@ -103,7 +128,34 @@ namespace TileTest
 
             // TODO: Add your update logic here
             if (this.m_currentKeyboardState.IsKeyDown(Keys.Up) && !this.m_previousKeyboardState.IsKeyDown(Keys.Up))
-                this.m_tileManager.SwapTile(this.m_tileManager.m_tilesArray[2, 1]);
+            { 
+
+                int textureRandomiser = this.m_random.Next(0, this.m_filenames.Count);
+
+                this.m_testSprite = this.m_puzzleTextures[textureRandomiser];
+
+                this.m_tileManager = new TileManager(4, this.m_testSprite, this.m_tileSlideSfx, this.m_bahnschriftFont, this.m_tileShadowTexture);
+                this.m_tileManager.GenerateTiles();
+                Point emptyTilePosition = this.m_tileManager.FindBlankTile();
+                this.m_tileManager.DetermineSwappableTiles();
+
+                this.m_tileManager.JumbleTiles();
+            }
+
+            if (this.m_currentKeyboardState.IsKeyDown(Keys.Down) && !this.m_previousKeyboardState.IsKeyDown(Keys.Down))
+            {
+
+                int textureRandomiser = this.m_random.Next(0, this.m_filenames.Count);
+
+                this.m_testSprite = this.m_puzzleTextures[textureRandomiser];
+
+                this.m_tileManager = new TileManager(2, this.m_testSprite, this.m_tileSlideSfx, this.m_bahnschriftFont, this.m_tileShadowTexture);
+                this.m_tileManager.GenerateTiles();
+                Point emptyTilePosition = this.m_tileManager.FindBlankTile();
+                this.m_tileManager.DetermineSwappableTiles();
+
+                this.m_tileManager.JumbleTiles();
+            }
 
             this.m_tileManager.CheckForTileClick(this.m_currentMouseState, this.m_previousMouseState);
 
@@ -128,6 +180,7 @@ namespace TileTest
             this.spriteBatch.Begin();
             this.spriteBatch.Draw(this.m_backgroundTexture, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
             //this.spriteBatch.Draw(this.m_testSprite, new Rectangle(0, 0, 500, 500), Color.White);
+            this.m_tileManager.DrawScore(this.spriteBatch);
             this.m_tileManager.DrawTiles(this.spriteBatch);
             this.spriteBatch.End();
 

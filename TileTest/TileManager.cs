@@ -25,6 +25,8 @@ namespace TileTest
         private SoundEffect m_tileSlideSfx;
         private bool m_shouldPlaySfx;
 
+        private int m_moves = 0;
+
         private SpriteFont m_font;
 
         private readonly Random m_random;
@@ -45,12 +47,13 @@ namespace TileTest
         public void GenerateTiles()
         {
             int maxArrayValue = this.m_gridSize - 1;
-
-            for (int x = 0; x < this.m_gridSize; x++)
+            int counter = 1;
+            for (int y = 0; y < this.m_gridSize; y++)
             {
-                for (int y = 0; y < this.m_gridSize; y++)
+                for (int x = 0; x < this.m_gridSize; x++)
                 {
-                    Tile newTile = new Tile(new Point(x, y), this.m_puzzleImage, this.m_gridSize, this.m_font, this.m_tileShadow);
+                    Tile newTile = new Tile(new Point(x, y), counter, this.m_puzzleImage, this.m_gridSize, this.m_font, this.m_tileShadow);
+                    counter++;
                     if (!(x == maxArrayValue && y == maxArrayValue))
                     {
                         //this.m_tileList.Add(newTile);
@@ -66,8 +69,10 @@ namespace TileTest
         public void UpdateTiles(GameTime gameTime)
         {
             foreach (IGridMember tile in this.m_tilesArray)
+            {
                 if (tile.GetType().ToString() == "TileTest.Tile")
-                        tile.UpdateIt(gameTime);
+                    tile.UpdateIt(gameTime);
+            }
         }
         public void DrawTiles(SpriteBatch spriteBatch)
         {
@@ -77,6 +82,11 @@ namespace TileTest
                     if (tile.GetType().ToString() == "TileTest.Tile")
                         tile.DrawIt(spriteBatch);
             }
+        }
+
+        public void DrawScore(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(this.m_font, $"Moves: {this.m_moves}", new Vector2(800, 500), Color.White);
         }
         public Point FindBlankTile()
         {
@@ -106,7 +116,7 @@ namespace TileTest
                         if (gridXDifference <= 1 && gridYDifference <= 1 && gridXDifference + gridYDifference <= 1)   
                         {
                             tile.IsCurrentlySwappable = true;
-                            Debug.WriteLine($"Tile at {tile.CurrentGridPosition.X}, {tile.CurrentGridPosition.Y} set as swappable!");
+                            //Debug.WriteLine($"Tile at {tile.CurrentGridPosition.X}, {tile.CurrentGridPosition.Y} set as swappable!");
                         }
                         else
                         {
@@ -129,6 +139,8 @@ namespace TileTest
             newEmptyTile.CurrentGridPosition = newEmptyPosition;
 
             this.m_tilesArray[newEmptyPosition.X, newEmptyPosition.Y] = newEmptyTile;
+
+            this.m_moves++;
 
             this.DetermineSwappableTiles();
         }
@@ -153,6 +165,7 @@ namespace TileTest
         public void JumbleTiles()
         {
             this.m_shouldPlaySfx = false;
+            int counter = 0;
             for (int i = 0; i < 1000; i++)
             {
                 int randX = this.m_random.Next(0, this.m_gridSize);
@@ -164,8 +177,11 @@ namespace TileTest
                     this.SwapTile(this.m_tilesArray[randX, randY]);
                 else
                     i--;
+                counter++;
             }
+            Debug.WriteLine(counter);
             this.m_shouldPlaySfx = true;
+            this.m_moves = 0;
         }
 
         public bool CheckPuzzleCompletion()
