@@ -13,8 +13,8 @@ namespace TileTest
     {
 
         private const int TILE_DIMENSION = 150;
-        private const int GRID_START_X = 200;
-        private const int GRID_START_Y = 200;
+        private const int GRID_START_X = 150;
+        private const int GRID_START_Y = 150;
         public const int TILE_PADDING = 5;
         public const int IMAGE_TOLERANCE = 5;
         public const int ANIMATION_TOLERANCE = 2;
@@ -135,31 +135,28 @@ namespace TileTest
             {
                 this.m_tileAnimatedDrawPosition.X = this.TileFinalDrawPosition.X;
             }
-            //else
-            //{
+           
+            float deltaY = this.m_tileAnimatedDrawPosition.Y - this.TileFinalDrawPosition.Y;
 
-                float deltaY = this.m_tileAnimatedDrawPosition.Y - this.TileFinalDrawPosition.Y;
+            if (!(Math.Abs(deltaY) <= ANIMATION_TOLERANCE))
+            {
+                float ANIMATION_SPEED_BOOST_Y = (float)(Math.Abs(deltaY) * DELTA_MULTIPLIER * gameTime.ElapsedGameTime.TotalSeconds);
 
-                if (!(Math.Abs(deltaY) <= ANIMATION_TOLERANCE))
+                if (deltaY < -ANIMATION_TOLERANCE)
                 {
-                    float ANIMATION_SPEED_BOOST_Y = (float)(Math.Abs(deltaY) * DELTA_MULTIPLIER * gameTime.ElapsedGameTime.TotalSeconds);
-
-                    if (deltaY < -ANIMATION_TOLERANCE)
-                    {
-                        this.m_tileAnimatedDrawPosition.Y += (float)(ANIMATION_BASE_SPEED * gameTime.ElapsedGameTime.TotalSeconds);
-                        this.m_tileAnimatedDrawPosition.Y += ANIMATION_SPEED_BOOST_Y;
-                    }
-                    else if (deltaY > ANIMATION_TOLERANCE)
-                    {
-                        this.m_tileAnimatedDrawPosition.Y -= (float)(ANIMATION_BASE_SPEED * gameTime.ElapsedGameTime.TotalSeconds);
-                        this.m_tileAnimatedDrawPosition.Y -= ANIMATION_SPEED_BOOST_Y;
-                    }
+                    this.m_tileAnimatedDrawPosition.Y += (float)(ANIMATION_BASE_SPEED * gameTime.ElapsedGameTime.TotalSeconds);
+                    this.m_tileAnimatedDrawPosition.Y += ANIMATION_SPEED_BOOST_Y;
                 }
-                else if (this.m_tileAnimatedDrawPosition.Y != this.TileFinalDrawPosition.Y)
+                else if (deltaY > ANIMATION_TOLERANCE)
                 {
-                    this.m_tileAnimatedDrawPosition.Y = this.TileFinalDrawPosition.Y;
+                    this.m_tileAnimatedDrawPosition.Y -= (float)(ANIMATION_BASE_SPEED * gameTime.ElapsedGameTime.TotalSeconds);
+                    this.m_tileAnimatedDrawPosition.Y -= ANIMATION_SPEED_BOOST_Y;
                 }
-            //}
+            }
+            else if (this.m_tileAnimatedDrawPosition.Y != this.TileFinalDrawPosition.Y)
+            {
+                this.m_tileAnimatedDrawPosition.Y = this.TileFinalDrawPosition.Y;
+            }
         }
     }
 }

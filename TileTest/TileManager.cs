@@ -17,17 +17,21 @@ namespace TileTest
         
         public int m_gridSize;
 
-        //public List<IGridMember> m_tileList;
         public IGridMember[,] m_tilesArray;
+        public List<IGridMember> m_tilesList;
 
         public Texture2D m_puzzleImage;
         public Texture2D m_tileShadow;
         private SoundEffect m_tileSlideSfx;
+        private SpriteFont m_font;
+
         private bool m_shouldPlaySfx;
+
+        public bool m_puzzleComplete;
 
         private int m_moves = 0;
 
-        private SpriteFont m_font;
+        
 
         private readonly Random m_random;
         public Point BlankTilePosition => this.FindBlankTile();
@@ -40,7 +44,7 @@ namespace TileTest
             this.m_tileShadow = tileshadow;
             this.m_tileSlideSfx = slidesfx;
             this.m_font = font;
-
+            this.m_tilesList = new List<IGridMember>();
             this.m_random = new Random();
         }
 
@@ -56,12 +60,14 @@ namespace TileTest
                     counter++;
                     if (!(x == maxArrayValue && y == maxArrayValue))
                     {
-                        //this.m_tileList.Add(newTile);
                         this.m_tilesArray[x, y] = newTile;
+                        this.m_tilesList.Add(newTile);
                     }
                     else
                     {
-                        this.m_tilesArray[x, y] = new EmptyTile(new Point(x, y), this.m_gridSize);
+                        BlankTile newBlankTile = new BlankTile(new Point(x, y), this.m_gridSize);
+                        this.m_tilesArray[x, y] = newBlankTile;
+                        this.m_tilesList.Add(newBlankTile);
                     }
                 }
             }
@@ -84,22 +90,29 @@ namespace TileTest
             }
         }
 
+        public void DrawReferenceImage(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(this.m_puzzleImage, new Rectangle(900, 100, 300, 300), Color.White);
+        }
+
         public void DrawScore(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(this.m_font, $"Moves: {this.m_moves}", new Vector2(800, 500), Color.White);
+            spriteBatch.DrawString(this.m_font, $"Moves: {this.m_moves}", new Vector2(900, 600), Color.White);
+            if (this.m_puzzleComplete)
+                spriteBatch.DrawString(this.m_font, $"Puzzle complete!", new Vector2(900, 500), Color.White);
         }
+
         public Point FindBlankTile()
         {
             foreach (IGridMember tile in this.m_tilesArray)
             {
                 if (tile != null)
-                    if (tile.GetType().ToString() == "TileTest.EmptyTile")
+                    if (tile.GetType().ToString() == "TileTest.BlankTile")
                     {
-                        //Debug.WriteLine("Found empty tile!");
                         return new Point(tile.CurrentGridPosition.X, tile.CurrentGridPosition.Y);
                     }    
             }
-            Debug.WriteLine("Unable to locate the empty tile.");
+            Debug.WriteLine("Unable to locate the blank tile.");
             return new Point(0, 0);
         }
 
@@ -130,15 +143,15 @@ namespace TileTest
         {
             if (this.m_shouldPlaySfx)
                 this.m_tileSlideSfx.Play();
-            Point newEmptyPosition = new Point(tileToSwap.CurrentGridPosition.X, tileToSwap.CurrentGridPosition.Y);
+
+            Point newBlankPosition = new Point(tileToSwap.CurrentGridPosition.X, tileToSwap.CurrentGridPosition.Y);
 
             tileToSwap.CurrentGridPosition = this.FindBlankTile();
             this.m_tilesArray[tileToSwap.CurrentGridPosition.X, tileToSwap.CurrentGridPosition.Y] = tileToSwap;
 
-            EmptyTile newEmptyTile = new EmptyTile(new Point(this.m_gridSize - 1, this.m_gridSize - 1), this.m_gridSize);
-            newEmptyTile.CurrentGridPosition = newEmptyPosition;
-
-            this.m_tilesArray[newEmptyPosition.X, newEmptyPosition.Y] = newEmptyTile;
+            BlankTile newBlankTile = new BlankTile(new Point(this.m_gridSize - 1, this.m_gridSize - 1), this.m_gridSize);
+            newBlankTile.CurrentGridPosition = newBlankPosition;
+            this.m_tilesArray[newBlankPosition.X, newBlankPosition.Y] = newBlankTile;
 
             this.m_moves++;
 
@@ -158,28 +171,55 @@ namespace TileTest
                         this.SwapTile(tile);
                     }
                 }
+            } 
+        }    
+        public void CheckForArrowKey(KeyboardState currentKeyboardState, KeyboardState previousKeyboardState)
+        {
+            if (currentKeyboardState.IsKeyDown(Keys.Down) && !previousKeyboardState.IsKeyDown(Keys.Down))
+            {
+                if (this.BlankTilePosition.Y > 0)
+                {
+                    this.SwapTile(this.m_tilesArray[this.BlankTilePosition.X, this.BlankTilePosition.Y - 1]);
+                }
+            } 
+            
+            if (currentKeyboardState.IsKeyDown(Keys.Up) && !previousKeyboardState.IsKeyDown(Keys.Up))
+            {
+                if (this.BlankTilePosition.Y < this.m_gridSize - 1)
+                {
+                    this.SwapTile(this.m_tilesArray[this.BlankTilePosition.X, this.BlankTilePosition.Y + 1]);
+                }
             }
             
+            if (currentKeyboardState.IsKeyDown(Keys.Right) && !previousKeyboardState.IsKeyDown(Keys.Right))
+            {
+                if (this.BlankTilePosition.X > 0)
+                {
+                    this.SwapTile(this.m_tilesArray[this.BlankTilePosition.X - 1, this.BlankTilePosition.Y]);
+                }
+            } 
+            
+            if (currentKeyboardState.IsKeyDown(Keys.Left) && !previousKeyboardState.IsKeyDown(Keys.Left))
+            {
+                if (this.BlankTilePosition.X < this.m_gridSize - 1)
+                {
+                    this.SwapTile(this.m_tilesArray[this.BlankTilePosition.X + 1, this.BlankTilePosition.Y]);
+                }
+            }
         }
-        
         public void JumbleTiles()
         {
             this.m_shouldPlaySfx = false;
-            int counter = 0;
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 250; i++)
             {
-                int randX = this.m_random.Next(0, this.m_gridSize);
-                int randY = this.m_random.Next(0, this.m_gridSize);
-                
-                // prevent unsolvable puzzle by only allowing adjacent swaps during jumble process
-                IGridMember TileToSwap = this.m_tilesArray[randX, randY];
-                if (TileToSwap.IsCurrentlySwappable)
-                    this.SwapTile(this.m_tilesArray[randX, randY]);
-                else
-                    i--;
-                counter++;
+                IEnumerable<IGridMember> moveableTiles =
+                    from tile in this.m_tilesList
+                    where tile.IsCurrentlySwappable
+                    select tile;
+
+                int randomSelector = this.m_random.Next(0, moveableTiles.Count());
+                this.SwapTile(moveableTiles.ToList()[randomSelector]);
             }
-            Debug.WriteLine(counter);
             this.m_shouldPlaySfx = true;
             this.m_moves = 0;
         }
@@ -193,7 +233,8 @@ namespace TileTest
                     return false;
                 }
             }
-            Debug.WriteLine("Congratulations, you completed the puzzle!");
+            //Debug.WriteLine("Congratulations, you completed the puzzle!");
+            this.m_puzzleComplete = true;
             return true;
 
         }

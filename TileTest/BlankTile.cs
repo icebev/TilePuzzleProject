@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TileTest
 {
-    public class EmptyTile : IGridMember
+    public class BlankTile : IGridMember
     {
         public Point CurrentGridPosition { get; set; }
         public Point CorrectGridPosition { get; set; }
@@ -24,7 +24,7 @@ namespace TileTest
         {
         }
 
-        public EmptyTile(Point correctPosition, int gridSize)
+        public BlankTile(Point correctPosition, int gridSize)
         {
             this.CorrectGridPosition = correctPosition;
             this.CurrentGridPosition = correctPosition;
