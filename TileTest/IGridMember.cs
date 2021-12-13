@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TileTest
 {
-    interface IGridMember
+    public interface IGridMember
     {
         Point CurrentGridPosition { get; set; }
         Point CorrectGridPosition { get; set; }

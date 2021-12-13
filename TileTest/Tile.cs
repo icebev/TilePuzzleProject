@@ -107,7 +107,6 @@ namespace TileTest
                 TILE_DIMENSION + 1);
 
             spriteBatch.Draw(this.m_tileShadowTexture, shadowDestinationRectangle, null, Color.White);
-
             spriteBatch.Draw(this.m_puzzleImage, destinationRectangle, sourceRectangle, Color.White);
             spriteBatch.DrawString(this.m_hintFont, $"{this.m_positionValue}", new Vector2(this.m_tileAnimatedDrawPosition.X + 50, this.m_tileAnimatedDrawPosition.Y + 50), Color.White);
         }

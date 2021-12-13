@@ -48,3 +48,7 @@ C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzle
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\puzzles\mightyleap.xnb
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\puzzles\oketra.xnb
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\puzzles\sunset.xnb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\UI\sandyui.xnb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\UI\sandyuiobelisks.xnb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\background.xnb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\UI\squarecontainer.xnb

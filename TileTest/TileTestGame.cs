@@ -14,22 +14,22 @@ namespace TileTest
     {
         #region Member Variables
 
-        private GraphicsDeviceManager graphics;
+        private GraphicsDeviceManager m_graphics;
         private SpriteBatch m_spriteBatch;
 
         // Content member variables
-        private List<String> m_fileNames;
+        private List<String> m_puzzleFilenames;
         private List<Texture2D> m_puzzleTextures;
 
-        private Texture2D m_testSprite; 
         private Texture2D m_backgroundTexture;
+        private Texture2D m_squareUIElement;
         private Texture2D m_tileShadowTexture;
         private SoundEffect m_tileSlideSFX;
         private SpriteFont m_bahnschriftFont;
 
         private TileManager m_tileManager;
 
-        private Random m_random;
+        private readonly Random m_random;
 
         private KeyboardState m_currentKeyboardState;
         private KeyboardState m_previousKeyboardState;
@@ -39,14 +39,36 @@ namespace TileTest
 
         #endregion
 
-        private int RandomTextureNumber
+        #region Properties
+
+        // Using getters and setters ensures that private member variables aren't changed accidentally and restricts access accordingly
+        private SpriteBatch MainSpriteBatch 
         {
-            get { return this.m_random.Next(0, this.m_fileNames.Count); }
+            get { return this.m_spriteBatch; }
         }
+        public TileManager ActiveTileManager
+        {
+            get { return this.m_tileManager; }
+
+            private set { this.m_tileManager = value; }
+        }
+
+        // Helper property RandomPuzzleTexture selects at random one texture in the puzzleTextures list using the randomizer, for shuffling the displayed puzzle image
+        private Texture2D RandomPuzzleTexture
+        {
+            get 
+            {
+                int randomInt = this.m_random.Next(0, this.m_puzzleFilenames.Count);
+                return this.m_puzzleTextures[randomInt]; 
+            }
+        }
+
+        #endregion
         public TileTestGame()
         {
-            this.graphics = new GraphicsDeviceManager(this);
+            this.m_graphics = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
+            this.m_random = new Random();
         }
 
         /// <summary>
@@ -59,9 +81,10 @@ namespace TileTest
         {
             // TODO: Add your initialization logic here
             //this.graphics.IsFullScreen = true;
-            this.graphics.PreferredBackBufferWidth = 1600;
-            this.graphics.PreferredBackBufferHeight = 900;
-            this.graphics.ApplyChanges();
+            // Sets up the desired window resolution
+            this.m_graphics.PreferredBackBufferWidth = 1600;
+            this.m_graphics.PreferredBackBufferHeight = 900;
+            this.m_graphics.ApplyChanges();
 
             this.IsMouseVisible = true;
             base.Initialize();
@@ -77,37 +100,41 @@ namespace TileTest
             this.m_spriteBatch = new SpriteBatch(this.GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            // File names string list contains all of the .png image names
-            this.m_fileNames = new List<string> { "accursed", "tinybones", "building", "archfiend", "glorybringer", "kefnet", "mightyleap", "oketra", "sunset" };
-            this.m_puzzleTextures = LoadPuzzleImages();
-            this.m_random = new Random();
+
+            // Initialize the list of string Filenames - list contains all of the .png image names
+            this.m_puzzleFilenames = new List<string> { "accursed", "tinybones", "building", "archfiend", "glorybringer", "kefnet", "mightyleap", "oketra", "sunset" };
+            this.m_puzzleTextures = this.LoadTextureList(this.m_puzzleFilenames);
 
             // Content loading
-            this.m_backgroundTexture = this.Content.Load<Texture2D>("textures/ancientrock");
+            this.m_backgroundTexture = this.Content.Load<Texture2D>("textures/background");
+            this.m_squareUIElement = this.Content.Load<Texture2D>("textures/UI/squarecontainer");
             this.m_tileShadowTexture = this.Content.Load<Texture2D>("textures/tileshadow");
             this.m_tileSlideSFX = this.Content.Load<SoundEffect>("audio/slide");
             this.m_bahnschriftFont = this.Content.Load<SpriteFont>("fonts/bahnschrift");
 
-            this.SetupTileGrid(3, this.m_puzzleTextures[this.RandomTextureNumber]);
+            this.SetupTileGrid(3, this.RandomPuzzleTexture);
 
         }
-        public List<Texture2D> LoadPuzzleImages()
-        {
-            List<Texture2D> PuzzleImageList = new List<Texture2D>();
 
-            foreach (String filename in this.m_fileNames)
+        // LoadTextureList function takes in a string list and returns a list of loaded Texture2Ds to avoid writing many lines of similar code for loading each texture
+        public List<Texture2D> LoadTextureList(List<string> filenames)
+        {
+            List<Texture2D> textureList = new List<Texture2D>();
+
+            foreach (String filename in filenames)
             {
                 Texture2D newTexture = this.Content.Load<Texture2D>("textures/puzzles/" + filename);
-                PuzzleImageList.Add(newTexture);
+                textureList.Add(newTexture);
             }
-            return PuzzleImageList;
+            return textureList;
         }
+
+        // SetupTileGrid function creates a new TileManager object with a specified gridSize and puzzle image texture and will be stored in the ActiveTileManager for reference
         public void SetupTileGrid(int gridSize, Texture2D puzzleImage)
         {
-            this.m_tileManager = new TileManager(gridSize, puzzleImage, this.m_tileSlideSFX, this.m_bahnschriftFont, this.m_tileShadowTexture);
-            this.m_tileManager.GenerateTiles();
-            this.m_tileManager.DetermineSwappableTiles();
-            this.m_tileManager.JumbleTiles();
+            this.ActiveTileManager = new TileManager(gridSize, puzzleImage, this.m_tileSlideSFX, this.m_bahnschriftFont, this.m_tileShadowTexture);
+            this.ActiveTileManager.GenerateTiles();
+            this.ActiveTileManager.JumbleTiles();
         }
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -125,6 +152,7 @@ namespace TileTest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            // Update member variables with the current input states of the keyboard and mouse
             this.m_currentKeyboardState = Keyboard.GetState();
             this.m_currentMouseState = Mouse.GetState();
 
@@ -134,27 +162,27 @@ namespace TileTest
             // TODO: Add your update logic here
             if (this.m_currentKeyboardState.IsKeyDown(Keys.NumPad2) && !this.m_previousKeyboardState.IsKeyDown(Keys.NumPad2))
             {
-                this.SetupTileGrid(2, this.m_puzzleTextures[this.RandomTextureNumber]);
+                this.SetupTileGrid(2, this.RandomPuzzleTexture);
             }
 
             if (this.m_currentKeyboardState.IsKeyDown(Keys.NumPad3) && !this.m_previousKeyboardState.IsKeyDown(Keys.NumPad3))
             {
-                this.SetupTileGrid(3, this.m_puzzleTextures[this.RandomTextureNumber]);
+                this.SetupTileGrid(3, this.RandomPuzzleTexture);
             }
 
             if (this.m_currentKeyboardState.IsKeyDown(Keys.NumPad4) && !this.m_previousKeyboardState.IsKeyDown(Keys.NumPad4))
             {
-                this.SetupTileGrid(4, this.m_puzzleTextures[this.RandomTextureNumber]);
+                this.SetupTileGrid(4, this.RandomPuzzleTexture);
             }
 
-            this.m_tileManager.CheckForTileClick(this.m_currentMouseState, this.m_previousMouseState);
-            this.m_tileManager.CheckForArrowKey(this.m_currentKeyboardState, this.m_previousKeyboardState);
+            this.ActiveTileManager.CheckForTileClick(this.m_currentMouseState, this.m_previousMouseState);
+            this.ActiveTileManager.CheckForArrowKey(this.m_currentKeyboardState, this.m_previousKeyboardState);
+            this.ActiveTileManager.UpdateTiles(gameTime);
+            this.ActiveTileManager.CheckPuzzleCompletion();
 
+            // Store the input states for reference in the next update method, used to make sure that the keys or mouse cannot be held down to break the game
             this.m_previousKeyboardState = Keyboard.GetState();
             this.m_previousMouseState = Mouse.GetState();
-
-            this.m_tileManager.UpdateTiles(gameTime);
-            this.m_tileManager.CheckPuzzleCompletion();
 
             base.Update(gameTime);
         }
@@ -165,15 +193,19 @@ namespace TileTest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            this.GraphicsDevice.Clear(Color.Purple);
+            this.GraphicsDevice.Clear(Color.SandyBrown);
 
             // TODO: Add your drawing code here
-            this.m_spriteBatch.Begin();
-            this.m_spriteBatch.Draw(this.m_backgroundTexture, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
-            this.m_tileManager.DrawScore(this.m_spriteBatch);
-            this.m_tileManager.DrawTiles(this.m_spriteBatch);
-            this.m_tileManager.DrawReferenceImage(this.m_spriteBatch);
-            this.m_spriteBatch.End();
+            this.MainSpriteBatch.Begin();
+
+            this.MainSpriteBatch.Draw(this.m_backgroundTexture, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
+            this.MainSpriteBatch.Draw(this.m_tileShadowTexture, new Rectangle(150 - 15, 150 - 15, 450 + 60, 450+ 60), Color.White);
+            this.MainSpriteBatch.Draw(this.m_squareUIElement, new Rectangle(150 - 20, 150 - 20, 450 + 60, 450+ 60), Color.White);
+            this.ActiveTileManager.DrawScore(this.MainSpriteBatch);
+            this.ActiveTileManager.DrawTiles(this.MainSpriteBatch);
+            this.ActiveTileManager.DrawReferenceImage(this.MainSpriteBatch);
+
+            this.MainSpriteBatch.End();
 
             base.Draw(gameTime);
         }

@@ -12,51 +12,86 @@ using System.Threading.Tasks;
 namespace TileTest
 {
    
-    class TileManager
+    public class TileManager
     {
-        
-        public int m_gridSize;
+        #region Member Variables
 
-        public IGridMember[,] m_tilesArray;
-        public List<IGridMember> m_tilesList;
+        private int m_gridSize;
 
-        public Texture2D m_puzzleImage;
-        public Texture2D m_tileShadow;
+        private IGridMember[,] m_tilesArray;
+        private List<IGridMember> m_tilesList;
+
+        private Texture2D m_puzzleImage;
+        private Texture2D m_tileShadow;
         private SoundEffect m_tileSlideSfx;
         private SpriteFont m_font;
 
         private bool m_shouldPlaySfx;
-
         public bool m_puzzleComplete;
 
         private int m_moves = 0;
 
-        
-
         private readonly Random m_random;
-        public Point BlankTilePosition => this.FindBlankTile();
-        public TileManager(int gridSize, Texture2D picture, SoundEffect slidesfx, SpriteFont font, Texture2D tileshadow)
+
+        #endregion
+
+        #region Properties
+
+        public Point BlankTilePosition
         {
-            this.m_gridSize = gridSize;
-            //this.m_tileList = new List<IGridMember>();
-            this.m_tilesArray = new IGridMember[this.m_gridSize, this.m_gridSize];
+            get { return this.FindBlankTile(); }
+        }
+
+        public int GridSize
+        {
+            get { return this.m_gridSize; }
+            private set { this.m_gridSize = value; }
+        }
+
+        public IGridMember[,] TilesArray
+        {
+            get { return this.m_tilesArray; }
+            private set { this.m_tilesArray = value; }
+        }   
+        
+        public List<IGridMember> TilesList
+        {
+            get { return this.m_tilesList; }
+            private set { this.m_tilesList = value; }
+        }
+
+        public int MoveCount 
+        {
+            get { return this.m_moves; }
+            private set { this.m_moves = value; }
+        }
+
+        #endregion
+
+        public TileManager(int gridSize, Texture2D picture, SoundEffect slideSFX, SpriteFont font, Texture2D tileshadow)
+        {
+            this.m_random = new Random();
+
             this.m_puzzleImage = picture;
             this.m_tileShadow = tileshadow;
-            this.m_tileSlideSfx = slidesfx;
+            this.m_tileSlideSfx = slideSFX;
             this.m_font = font;
-            this.m_tilesList = new List<IGridMember>();
-            this.m_random = new Random();
+
+            this.GridSize = gridSize;
+            this.TilesArray = new IGridMember[this.m_gridSize, this.m_gridSize];
+            this.TilesList = new List<IGridMember>();
+            
         }
 
         public void GenerateTiles()
         {
-            int maxArrayValue = this.m_gridSize - 1;
+            int maxArrayValue = this.GridSize - 1;
             int counter = 1;
-            for (int y = 0; y < this.m_gridSize; y++)
+            for (int y = 0; y < this.GridSize; y++)
             {
-                for (int x = 0; x < this.m_gridSize; x++)
+                for (int x = 0; x < this.GridSize; x++)
                 {
-                    Tile newTile = new Tile(new Point(x, y), counter, this.m_puzzleImage, this.m_gridSize, this.m_font, this.m_tileShadow);
+                    Tile newTile = new Tile(new Point(x, y), counter, this.m_puzzleImage, this.GridSize, this.m_font, this.m_tileShadow);
                     counter++;
                     if (!(x == maxArrayValue && y == maxArrayValue))
                     {
@@ -65,12 +100,13 @@ namespace TileTest
                     }
                     else
                     {
-                        BlankTile newBlankTile = new BlankTile(new Point(x, y), this.m_gridSize);
+                        BlankTile newBlankTile = new BlankTile(new Point(x, y), this.GridSize);
                         this.m_tilesArray[x, y] = newBlankTile;
                         this.m_tilesList.Add(newBlankTile);
                     }
                 }
             }
+            this.DetermineSwappableTiles();
         }
         public void UpdateTiles(GameTime gameTime)
         {
@@ -92,6 +128,7 @@ namespace TileTest
 
         public void DrawReferenceImage(SpriteBatch spriteBatch)
         {
+            spriteBatch.Draw(this.m_tileShadow, new Rectangle(905, 105, 300, 300), Color.White);
             spriteBatch.Draw(this.m_puzzleImage, new Rectangle(900, 100, 300, 300), Color.White);
         }
 
@@ -210,7 +247,7 @@ namespace TileTest
         public void JumbleTiles()
         {
             this.m_shouldPlaySfx = false;
-            for (int i = 0; i < 250; i++)
+            for (int i = 0; i < 500; i++)
             {
                 IEnumerable<IGridMember> moveableTiles =
                     from tile in this.m_tilesList
@@ -221,7 +258,7 @@ namespace TileTest
                 this.SwapTile(moveableTiles.ToList()[randomSelector]);
             }
             this.m_shouldPlaySfx = true;
-            this.m_moves = 0;
+            this.MoveCount = 0;
         }
 
         public bool CheckPuzzleCompletion()
@@ -233,7 +270,6 @@ namespace TileTest
                     return false;
                 }
             }
-            //Debug.WriteLine("Congratulations, you completed the puzzle!");
             this.m_puzzleComplete = true;
             return true;
 
