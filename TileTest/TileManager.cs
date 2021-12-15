@@ -184,66 +184,66 @@ namespace TileTest
             Point newBlankPosition = new Point(tileToSwap.CurrentGridPosition.X, tileToSwap.CurrentGridPosition.Y);
 
             tileToSwap.CurrentGridPosition = this.FindBlankTile();
-            this.m_tilesArray[tileToSwap.CurrentGridPosition.X, tileToSwap.CurrentGridPosition.Y] = tileToSwap;
+            this.TilesArray[tileToSwap.CurrentGridPosition.X, tileToSwap.CurrentGridPosition.Y] = tileToSwap;
 
             BlankTile newBlankTile = new BlankTile(new Point(this.m_gridSize - 1, this.m_gridSize - 1), this.m_gridSize);
             newBlankTile.CurrentGridPosition = newBlankPosition;
-            this.m_tilesArray[newBlankPosition.X, newBlankPosition.Y] = newBlankTile;
+            this.TilesArray[newBlankPosition.X, newBlankPosition.Y] = newBlankTile;
 
             this.m_moves++;
 
             this.DetermineSwappableTiles();
         }
 
-        public void CheckForTileClick(MouseState currentMouseState, MouseState previousMouseState)
-        {
-            foreach (IGridMember tile in this.m_tilesArray)
-            {
-                if (tile.IsCurrentlySwappable && tile.GetType().ToString() == "TileTest.Tile")
-                {
-                    if (tile.TileBounds.Contains(currentMouseState.Position) 
-                        && currentMouseState.LeftButton == ButtonState.Pressed 
-                        && previousMouseState.LeftButton == ButtonState.Released)
-                    {
-                        this.SwapTile(tile);
-                    }
-                }
-            } 
-        }    
-        public void CheckForArrowKey(KeyboardState currentKeyboardState, KeyboardState previousKeyboardState)
-        {
-            if (currentKeyboardState.IsKeyDown(Keys.Down) && !previousKeyboardState.IsKeyDown(Keys.Down))
-            {
-                if (this.BlankTilePosition.Y > 0)
-                {
-                    this.SwapTile(this.m_tilesArray[this.BlankTilePosition.X, this.BlankTilePosition.Y - 1]);
-                }
-            } 
+        //public void CheckForTileClick(MouseState currentMouseState, MouseState previousMouseState)
+        //{
+        //    foreach (IGridMember tile in this.m_tilesArray)
+        //    {
+        //        if (tile.IsCurrentlySwappable && tile.GetType().ToString() == "TileTest.Tile")
+        //        {
+        //            if (tile.TileBounds.Contains(currentMouseState.Position) 
+        //                && currentMouseState.LeftButton == ButtonState.Pressed 
+        //                && previousMouseState.LeftButton == ButtonState.Released)
+        //            {
+        //                this.SwapTile(tile);
+        //            }
+        //        }
+        //    } 
+        //}    
+        //public void CheckForArrowKey(KeyboardState currentKeyboardState, KeyboardState previousKeyboardState)
+        //{
+        //    if (currentKeyboardState.IsKeyDown(Keys.Down) && !previousKeyboardState.IsKeyDown(Keys.Down))
+        //    {
+        //        if (this.BlankTilePosition.Y > 0)
+        //        {
+        //            this.SwapTile(this.TilesArray[this.BlankTilePosition.X, this.BlankTilePosition.Y - 1]);
+        //        }
+        //    } 
             
-            if (currentKeyboardState.IsKeyDown(Keys.Up) && !previousKeyboardState.IsKeyDown(Keys.Up))
-            {
-                if (this.BlankTilePosition.Y < this.m_gridSize - 1)
-                {
-                    this.SwapTile(this.m_tilesArray[this.BlankTilePosition.X, this.BlankTilePosition.Y + 1]);
-                }
-            }
+        //    if (currentKeyboardState.IsKeyDown(Keys.Up) && !previousKeyboardState.IsKeyDown(Keys.Up))
+        //    {
+        //        if (this.BlankTilePosition.Y < this.m_gridSize - 1)
+        //        {
+        //            this.SwapTile(this.TilesArray[this.BlankTilePosition.X, this.BlankTilePosition.Y + 1]);
+        //        }
+        //    }
             
-            if (currentKeyboardState.IsKeyDown(Keys.Right) && !previousKeyboardState.IsKeyDown(Keys.Right))
-            {
-                if (this.BlankTilePosition.X > 0)
-                {
-                    this.SwapTile(this.m_tilesArray[this.BlankTilePosition.X - 1, this.BlankTilePosition.Y]);
-                }
-            } 
+        //    if (currentKeyboardState.IsKeyDown(Keys.Right) && !previousKeyboardState.IsKeyDown(Keys.Right))
+        //    {
+        //        if (this.BlankTilePosition.X > 0)
+        //        {
+        //            this.SwapTile(this.TilesArray[this.BlankTilePosition.X - 1, this.BlankTilePosition.Y]);
+        //        }
+        //    } 
             
-            if (currentKeyboardState.IsKeyDown(Keys.Left) && !previousKeyboardState.IsKeyDown(Keys.Left))
-            {
-                if (this.BlankTilePosition.X < this.m_gridSize - 1)
-                {
-                    this.SwapTile(this.m_tilesArray[this.BlankTilePosition.X + 1, this.BlankTilePosition.Y]);
-                }
-            }
-        }
+        //    if (currentKeyboardState.IsKeyDown(Keys.Left) && !previousKeyboardState.IsKeyDown(Keys.Left))
+        //    {
+        //        if (this.BlankTilePosition.X < this.m_gridSize - 1)
+        //        {
+        //            this.SwapTile(this.TilesArray[this.BlankTilePosition.X + 1, this.BlankTilePosition.Y]);
+        //        }
+        //    }
+        //}
         public void JumbleTiles()
         {
             this.m_shouldPlaySfx = false;

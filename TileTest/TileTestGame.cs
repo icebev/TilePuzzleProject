@@ -21,14 +21,16 @@ namespace TileTest
         private List<String> m_puzzleFilenames;
         private List<Texture2D> m_puzzleTextures;
 
-        private Texture2D m_backgroundTexture;
-        private Texture2D m_squareUIElement;
+        private Texture2D m_titleBackgroundTexture;
+        private Texture2D m_puzzleBackgroundTexture;
         private Texture2D m_tileShadowTexture;
         private SoundEffect m_tileSlideSFX;
         private SpriteFont m_bahnschriftFont;
 
+        private GameState m_gameState;
         private TileManager m_tileManager;
-
+        private InputManager m_inputManager;
+        private InterfaceRenderer m_interfaceRenderer;
         private readonly Random m_random;
 
         private KeyboardState m_currentKeyboardState;
@@ -53,8 +55,14 @@ namespace TileTest
             private set { this.m_tileManager = value; }
         }
 
+        public GameState ActiveGameState
+        {
+            get { return this.m_gameState; }
+            set { this.m_gameState = value; }
+        }
+
         // Helper property RandomPuzzleTexture selects at random one texture in the puzzleTextures list using the randomizer, for shuffling the displayed puzzle image
-        private Texture2D RandomPuzzleTexture
+        public Texture2D RandomPuzzleTexture
         {
             get 
             {
@@ -64,11 +72,14 @@ namespace TileTest
         }
 
         #endregion
+
+        // Constructor for the TileTestGame class
         public TileTestGame()
         {
             this.m_graphics = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
             this.m_random = new Random();
+            this.ActiveGameState = GameState.TitleScreen;
         }
 
         /// <summary>
@@ -106,13 +117,14 @@ namespace TileTest
             this.m_puzzleTextures = this.LoadTextureList(this.m_puzzleFilenames);
 
             // Content loading
-            this.m_backgroundTexture = this.Content.Load<Texture2D>("textures/background");
-            this.m_squareUIElement = this.Content.Load<Texture2D>("textures/UI/squarecontainer");
-            this.m_tileShadowTexture = this.Content.Load<Texture2D>("textures/tileshadow");
+            this.m_titleBackgroundTexture = this.Content.Load<Texture2D>("textures/backgrounds/titleBackground");
+            this.m_puzzleBackgroundTexture = this.Content.Load<Texture2D>("textures/backgrounds/puzzleBackground");
+            this.m_tileShadowTexture = this.Content.Load<Texture2D>("textures/shadows/tileShadow");
             this.m_tileSlideSFX = this.Content.Load<SoundEffect>("audio/slide");
             this.m_bahnschriftFont = this.Content.Load<SpriteFont>("fonts/bahnschrift");
-
-            this.SetupTileGrid(3, this.RandomPuzzleTexture);
+            this.m_inputManager = new InputManager(this, this.ActiveTileManager);
+            this.m_interfaceRenderer = new InterfaceRenderer(this, this.m_bahnschriftFont);
+            this.m_interfaceRenderer.LoadTextures();
 
         }
 
@@ -135,6 +147,7 @@ namespace TileTest
             this.ActiveTileManager = new TileManager(gridSize, puzzleImage, this.m_tileSlideSFX, this.m_bahnschriftFont, this.m_tileShadowTexture);
             this.ActiveTileManager.GenerateTiles();
             this.ActiveTileManager.JumbleTiles();
+            this.ActiveGameState = GameState.PuzzleActive;
         }
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -156,29 +169,20 @@ namespace TileTest
             this.m_currentKeyboardState = Keyboard.GetState();
             this.m_currentMouseState = Mouse.GetState();
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || this.m_currentKeyboardState.IsKeyDown(Keys.Escape))
-                this.Exit();
+
 
             // TODO: Add your update logic here
-            if (this.m_currentKeyboardState.IsKeyDown(Keys.NumPad2) && !this.m_previousKeyboardState.IsKeyDown(Keys.NumPad2))
+      
+            if (this.ActiveTileManager != null)
             {
-                this.SetupTileGrid(2, this.RandomPuzzleTexture);
+                this.ActiveTileManager.UpdateTiles(gameTime);
+                this.ActiveTileManager.CheckPuzzleCompletion();
             }
 
-            if (this.m_currentKeyboardState.IsKeyDown(Keys.NumPad3) && !this.m_previousKeyboardState.IsKeyDown(Keys.NumPad3))
-            {
-                this.SetupTileGrid(3, this.RandomPuzzleTexture);
-            }
+            this.m_inputManager.ProcessControls(this.m_previousMouseState, this.m_currentMouseState, 
+                this.m_previousKeyboardState, this.m_currentKeyboardState, gameTime);
 
-            if (this.m_currentKeyboardState.IsKeyDown(Keys.NumPad4) && !this.m_previousKeyboardState.IsKeyDown(Keys.NumPad4))
-            {
-                this.SetupTileGrid(4, this.RandomPuzzleTexture);
-            }
-
-            this.ActiveTileManager.CheckForTileClick(this.m_currentMouseState, this.m_previousMouseState);
-            this.ActiveTileManager.CheckForArrowKey(this.m_currentKeyboardState, this.m_previousKeyboardState);
-            this.ActiveTileManager.UpdateTiles(gameTime);
-            this.ActiveTileManager.CheckPuzzleCompletion();
+            this.m_interfaceRenderer.UpdateIt(gameTime);
 
             // Store the input states for reference in the next update method, used to make sure that the keys or mouse cannot be held down to break the game
             this.m_previousKeyboardState = Keyboard.GetState();
@@ -197,14 +201,20 @@ namespace TileTest
 
             // TODO: Add your drawing code here
             this.MainSpriteBatch.Begin();
+            if (this.ActiveGameState == GameState.TitleScreen)
+            {
+                this.MainSpriteBatch.Draw(this.m_titleBackgroundTexture, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
+                this.m_interfaceRenderer.DrawInterface(this.MainSpriteBatch);
 
-            this.MainSpriteBatch.Draw(this.m_backgroundTexture, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
-            this.MainSpriteBatch.Draw(this.m_tileShadowTexture, new Rectangle(150 - 15, 150 - 15, 450 + 60, 450+ 60), Color.White);
-            this.MainSpriteBatch.Draw(this.m_squareUIElement, new Rectangle(150 - 20, 150 - 20, 450 + 60, 450+ 60), Color.White);
-            this.ActiveTileManager.DrawScore(this.MainSpriteBatch);
-            this.ActiveTileManager.DrawTiles(this.MainSpriteBatch);
-            this.ActiveTileManager.DrawReferenceImage(this.MainSpriteBatch);
-
+            }
+            if (this.ActiveGameState == GameState.PuzzleActive)
+            {
+                this.MainSpriteBatch.Draw(this.m_puzzleBackgroundTexture, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
+                this.m_interfaceRenderer.DrawInterface(this.MainSpriteBatch);
+                this.ActiveTileManager.DrawScore(this.MainSpriteBatch);
+                this.ActiveTileManager.DrawTiles(this.MainSpriteBatch);
+                this.ActiveTileManager.DrawReferenceImage(this.MainSpriteBatch);
+            }
             this.MainSpriteBatch.End();
 
             base.Draw(gameTime);
