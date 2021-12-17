@@ -51,7 +51,6 @@ C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzle
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\shadows\tileShadow.xnb
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\interface\squareContainer.xnb
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\button\click.xnb
-C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\button\default.xnb
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\button\hover.xnb
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\backgrounds\puzzleBackground.xnb
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\backgrounds\titleBackground.xnb
@@ -59,3 +58,4 @@ C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzle
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\shadows\sandyShadow.xnb
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\interface\obelisks.xnb
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\interface\sandy.xnb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\button\normal.xnb

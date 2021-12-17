@@ -9,7 +9,6 @@
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/backgrounds/puzzleBackground.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/backgrounds/titleBackground.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/button/click.png</File>
-    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/button/default.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/button/hover.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/puzzles/accursed.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/puzzles/archfiend.png</File>
@@ -28,5 +27,6 @@
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/shadows/sandyShadow.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/shadows/squareContainerShadow.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/shadows/tileShadow.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/button/normal.png</File>
   </SourceFiles>
 </SourceFileCollection>

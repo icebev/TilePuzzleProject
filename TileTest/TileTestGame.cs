@@ -25,7 +25,8 @@ namespace TileTest
         private Texture2D m_puzzleBackgroundTexture;
         private Texture2D m_tileShadowTexture;
         private SoundEffect m_tileSlideSFX;
-        private SpriteFont m_bahnschriftFont;
+
+        public SpriteFont m_bahnschriftFont;
 
         private GameState m_gameState;
         private TileManager m_tileManager;
@@ -38,6 +39,7 @@ namespace TileTest
 
         private MouseState m_currentMouseState;
         private MouseState m_previousMouseState;
+        
 
         #endregion
 
@@ -70,6 +72,8 @@ namespace TileTest
                 return this.m_puzzleTextures[randomInt]; 
             }
         }
+
+        public List<Texture2D> PuzzleTextures { get => this.m_puzzleTextures; private set => this.m_puzzleTextures = value; }
 
         #endregion
 
@@ -125,6 +129,7 @@ namespace TileTest
             this.m_inputManager = new InputManager(this, this.ActiveTileManager);
             this.m_interfaceRenderer = new InterfaceRenderer(this, this.m_bahnschriftFont);
             this.m_interfaceRenderer.LoadTextures();
+            //this.m_buttonManager = new ButtonManager(this);
 
         }
 
@@ -179,8 +184,12 @@ namespace TileTest
                 this.ActiveTileManager.CheckPuzzleCompletion();
             }
 
+            
+
             this.m_inputManager.ProcessControls(this.m_previousMouseState, this.m_currentMouseState, 
                 this.m_previousKeyboardState, this.m_currentKeyboardState, gameTime);
+
+
 
             this.m_interfaceRenderer.UpdateIt(gameTime);
 
@@ -205,8 +214,10 @@ namespace TileTest
             {
                 this.MainSpriteBatch.Draw(this.m_titleBackgroundTexture, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
                 this.m_interfaceRenderer.DrawInterface(this.MainSpriteBatch);
+                //this.m_buttonManager.DrawButtons(this.MainSpriteBatch);
+                this.m_inputManager.DrawIt(this.MainSpriteBatch);
 
-            }
+    }
             if (this.ActiveGameState == GameState.PuzzleActive)
             {
                 this.MainSpriteBatch.Draw(this.m_puzzleBackgroundTexture, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
@@ -215,7 +226,14 @@ namespace TileTest
                 this.ActiveTileManager.DrawTiles(this.MainSpriteBatch);
                 this.ActiveTileManager.DrawReferenceImage(this.MainSpriteBatch);
             }
-            this.MainSpriteBatch.End();
+            if (this.ActiveGameState == GameState.PuzzleSelect)
+            {
+                this.MainSpriteBatch.Draw(this.m_puzzleBackgroundTexture, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
+                this.m_interfaceRenderer.DrawInterface(this.MainSpriteBatch);
+            }
+
+
+                this.MainSpriteBatch.End();
 
             base.Draw(gameTime);
         }

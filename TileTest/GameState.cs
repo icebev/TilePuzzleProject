@@ -9,6 +9,7 @@ namespace TileTest
     public enum GameState
     {
         TitleScreen,
+        OptionsScreen,
         PuzzleSelect,
         PuzzleActive,
         PuzzleComplete

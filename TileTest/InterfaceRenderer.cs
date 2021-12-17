@@ -68,6 +68,13 @@ namespace TileTest
                 spriteBatch.Draw(this.m_squareContainerShadow, new Rectangle(150 - 15, 150 - 15, 450 + 60, 450 + 60), Color.White);
                 spriteBatch.Draw(this.m_squareContainer, new Rectangle(150 - 20, 150 - 20, 450 + 60, 450 + 60), Color.White);
             }
+
+            if (this.ActiveGameState == GameState.PuzzleSelect)
+            {
+                spriteBatch.Draw(this.m_sandyShadow, new Rectangle(150 - 15, 150 - 15, 450 + 60, 450 + 60), Color.White);
+                spriteBatch.Draw(this.m_sandy, new Rectangle(150 - 20, 150 - 20, 450 + 60, 450 + 60), Color.White);
+
+            }
         }
 
         public void UpdateIt(GameTime gameTime)

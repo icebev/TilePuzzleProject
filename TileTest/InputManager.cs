@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace TileTest
     class InputManager
     {
         private TileTestGame m_mainGame;
+        private ButtonManager m_buttonManager;
 
         private TileTestGame MainGame
         {
@@ -31,12 +33,21 @@ namespace TileTest
         public InputManager(TileTestGame mainGame, TileManager tileManager)
         {
             this.m_mainGame = mainGame;
-            
+            this.m_buttonManager = new ButtonManager(mainGame);
+        }
+
+     
+
+        public void DrawIt(SpriteBatch spriteBatch)
+        {
+            this.m_buttonManager.DrawButtons(spriteBatch);
         }
 
         public void ProcessControls(MouseState previousMouseState, MouseState currentMouseState, 
             KeyboardState previousKeyboardState, KeyboardState currentKeyboardState, GameTime gameTime)
         {
+            this.m_buttonManager.UpdateButtons(gameTime, currentMouseState);
+
             if (currentMouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released)
             {
                 this.MouseClickResponse(currentMouseState, gameTime);
@@ -51,6 +62,8 @@ namespace TileTest
         private void MouseClickResponse(MouseState currentMouseState, GameTime gameTime)
         {
             Debug.WriteLine("Click detected!");
+            this.m_buttonManager.CheckIfButtonsClicked(currentMouseState);
+
             if (this.ActiveGameState == GameState.PuzzleActive)
             {
                 foreach (IGridMember tile in this.ActiveTileManager.TilesArray)
