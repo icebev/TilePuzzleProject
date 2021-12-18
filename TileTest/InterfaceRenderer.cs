@@ -10,6 +10,9 @@ namespace TileTest
 {
     public class InterfaceRenderer
     {
+        private const float CENTRAL_INTERFACE_PROPORTION_X = 0.7f;
+        private const float CENTRAL_INTERFACE_PROPORTION_Y = 0.8f;
+        private const int SHADOW_OFFSET = 5;
         private TileTestGame m_mainGame;
 
         private Texture2D m_obelisks;
@@ -23,15 +26,17 @@ namespace TileTest
         private SpriteFont m_bahnschriftFont;
 
         private float m_obelisksScale = 0;
-        private float m_obelisksScaleMultiplier = 0.01f;
+        private float m_obelisksIncrement = 0.01f;
 
-        
+        private TitleScreenState m_titleState = TitleScreenState.Animated;
 
         private GameState ActiveGameState
         {
             get { return this.m_mainGame.ActiveGameState; }
             set { this.m_mainGame.ActiveGameState = value; }
         }
+
+        public TitleScreenState TitleState { get => this.m_titleState; set => this.m_titleState = value; }
 
         public InterfaceRenderer(TileTestGame mainGame, SpriteFont font)
         {
@@ -56,10 +61,19 @@ namespace TileTest
         {
             if (this.ActiveGameState == GameState.TitleScreen)
             {
-                spriteBatch.Draw(this.m_obelisksShadow, new Rectangle(150 - 5, 150 - 10, (int)(this.m_obelisks.Width * this.m_obelisksScale), (int)(this.m_obelisks.Height * this.m_obelisksScale)), Color.White);
-                spriteBatch.Draw(this.m_obelisks, new Rectangle(150 - 15, 150 - 15, (int)(this.m_obelisks.Width* this.m_obelisksScale), (int)(this.m_obelisks.Height * this.m_obelisksScale)), Color.White);
+                spriteBatch.Draw(this.m_obelisksShadow,
+                    new Rectangle(this.m_mainGame.WindowCenter.X + SHADOW_OFFSET, this.m_mainGame.WindowCenter.Y + SHADOW_OFFSET, (int)(this.m_mainGame.WindowWidth * CENTRAL_INTERFACE_PROPORTION_X * this.m_obelisksScale), (int)(this.m_mainGame.WindowHeight * CENTRAL_INTERFACE_PROPORTION_Y * this.m_obelisksScale)),
+                    null, Color.White, 0, new Vector2(this.m_obelisksShadow.Width / 2, this.m_obelisksShadow.Height / 2), SpriteEffects.None, 1); 
+                
+                spriteBatch.Draw(this.m_obelisks, 
+                    new Rectangle(this.m_mainGame.WindowCenter.X, this.m_mainGame.WindowCenter.Y, (int)(this.m_mainGame.WindowWidth * CENTRAL_INTERFACE_PROPORTION_X * this.m_obelisksScale), (int)(this.m_mainGame.WindowHeight * CENTRAL_INTERFACE_PROPORTION_Y * this.m_obelisksScale)), 
+                    null, Color.White, 0, new Vector2(this.m_obelisks.Width / 2, this.m_obelisks.Height / 2), SpriteEffects.None, 1);
+
                 if (this.m_obelisksScale >= 1)
-                    spriteBatch.DrawString(this.m_bahnschriftFont, "Amonkhet Tile Puzzles", new Vector2(400, 300), Color.White);
+                {
+                    string text = "Amonkhet Tile Puzzles";
+                    spriteBatch.DrawString(this.m_bahnschriftFont, text, new Vector2((this.m_mainGame.WindowWidth / 2 - (int)(this.m_bahnschriftFont.MeasureString(text).X * 0.5)), this.m_mainGame.WindowHeight / 3), Color.White);
+                }
             }
 
 
@@ -82,14 +96,21 @@ namespace TileTest
             if (this.ActiveGameState != GameState.TitleScreen)
             {
                 this.m_obelisksScale = 0;
-                this.m_obelisksScaleMultiplier = 0.01f;
+                this.m_obelisksIncrement = 0.01f;
             }
-            
 
-            if (this.m_obelisksScale < 1)
+            if (this.TitleState == TitleScreenState.Animated)
             {
-                this.m_obelisksScale += (float)gameTime.ElapsedGameTime.TotalSeconds * this.m_obelisksScaleMultiplier;
-                this.m_obelisksScaleMultiplier += this.m_obelisksScale;
+
+                if (this.m_obelisksScale < 1)
+                {
+                    this.m_obelisksScale += (float)gameTime.ElapsedGameTime.TotalSeconds * this.m_obelisksIncrement;
+                    this.m_obelisksIncrement += this.m_obelisksScale;
+                }
+                else
+                {
+                    this.TitleState = TitleScreenState.Main;
+                }
             }
 
 

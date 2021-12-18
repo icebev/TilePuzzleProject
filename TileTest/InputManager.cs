@@ -62,7 +62,8 @@ namespace TileTest
         private void MouseClickResponse(MouseState currentMouseState, GameTime gameTime)
         {
             Debug.WriteLine("Click detected!");
-            this.m_buttonManager.CheckIfButtonsClicked(currentMouseState);
+            if (this.m_mainGame.ActiveGameState == GameState.TitleScreen)
+                this.m_buttonManager.CheckIfButtonsClicked(currentMouseState);
 
             if (this.ActiveGameState == GameState.PuzzleActive)
             {
@@ -139,7 +140,11 @@ namespace TileTest
                 if (this.ActiveGameState == GameState.TitleScreen)
                     this.MainGame.Exit();
                 else if (this.ActiveGameState == GameState.PuzzleActive)
+                {
+                    this.m_mainGame.m_graphics.IsFullScreen = false;
+                    this.m_mainGame.m_graphics.ApplyChanges();
                     this.ActiveGameState = GameState.TitleScreen;
+                }
                     
             }
         }

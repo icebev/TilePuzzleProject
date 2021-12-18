@@ -13,8 +13,10 @@ namespace TileTest
     public class TileTestGame : Game
     {
         #region Member Variables
+        public const int WINDOW_STARTING_WIDTH = 1600;
+        public const int WINDOW_STARTING_HEIGHT = 900;
 
-        private GraphicsDeviceManager m_graphics;
+        public GraphicsDeviceManager m_graphics;
         private SpriteBatch m_spriteBatch;
 
         // Content member variables
@@ -31,7 +33,7 @@ namespace TileTest
         private GameState m_gameState;
         private TileManager m_tileManager;
         private InputManager m_inputManager;
-        private InterfaceRenderer m_interfaceRenderer;
+        public InterfaceRenderer m_interfaceRenderer;
         private readonly Random m_random;
 
         private KeyboardState m_currentKeyboardState;
@@ -73,7 +75,36 @@ namespace TileTest
             }
         }
 
-        public List<Texture2D> PuzzleTextures { get => this.m_puzzleTextures; private set => this.m_puzzleTextures = value; }
+        public List<Texture2D> PuzzleTextures { get => this.m_puzzleTextures; }
+
+        public int WindowWidth
+        {
+            get 
+            {
+                int pixelWidth = this.Window.ClientBounds.Width;
+                return pixelWidth; 
+            }
+        }
+        public int WindowHeight
+        {
+            get
+            {
+                int pixelHeight = this.Window.ClientBounds.Height;
+                return pixelHeight;
+            }
+        }
+
+        public Point WindowCenter
+        {
+            get
+            {
+                Point centerPoint = new Point((int)(this.WindowWidth * 0.5), (int)(this.WindowHeight * 0.5));
+                return centerPoint;
+            }
+        }
+
+ 
+
 
         #endregion
 
@@ -97,8 +128,10 @@ namespace TileTest
             // TODO: Add your initialization logic here
             //this.graphics.IsFullScreen = true;
             // Sets up the desired window resolution
-            this.m_graphics.PreferredBackBufferWidth = 1600;
-            this.m_graphics.PreferredBackBufferHeight = 900;
+            this.m_graphics.PreferredBackBufferWidth = WINDOW_STARTING_WIDTH;
+            this.m_graphics.PreferredBackBufferHeight = WINDOW_STARTING_HEIGHT;
+            // Allow user to resize the window
+            this.Window.AllowUserResizing = true;
             this.m_graphics.ApplyChanges();
 
             this.IsMouseVisible = true;
@@ -153,6 +186,13 @@ namespace TileTest
             this.ActiveTileManager.GenerateTiles();
             this.ActiveTileManager.JumbleTiles();
             this.ActiveGameState = GameState.PuzzleActive;
+        }
+
+        public Vector2 GetWindowScaleFactor()
+        {
+            var scaleFactorX = (float)this.WindowWidth / (float)WINDOW_STARTING_WIDTH;
+            var scaleFactorY = (float)this.WindowHeight / (float)WINDOW_STARTING_HEIGHT;
+            return new Vector2(scaleFactorX, scaleFactorY);
         }
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
