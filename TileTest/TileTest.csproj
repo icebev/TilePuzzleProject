@@ -55,6 +55,7 @@
     <Compile Include="TileManager.cs" />
     <Compile Include="TileTestGame.cs" />
     <Compile Include="TitleScreenState.cs" />
+    <Compile Include="ToggleButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

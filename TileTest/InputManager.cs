@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace TileTest
 {
-    class InputManager
+    public class InputManager
     {
         private TileTestGame m_mainGame;
         private ButtonManager m_buttonManager;
@@ -22,6 +22,10 @@ namespace TileTest
         private TileManager ActiveTileManager
         {
             get { return this.MainGame.ActiveTileManager;  }
+        }
+        private ButtonManager ActiveButtonManager
+        {
+            get { return this.m_buttonManager;  }
         }
         
         private GameState ActiveGameState
@@ -37,7 +41,6 @@ namespace TileTest
         }
 
      
-
         public void DrawIt(SpriteBatch spriteBatch)
         {
             this.m_buttonManager.DrawButtons(spriteBatch);
@@ -46,7 +49,7 @@ namespace TileTest
         public void ProcessControls(MouseState previousMouseState, MouseState currentMouseState, 
             KeyboardState previousKeyboardState, KeyboardState currentKeyboardState, GameTime gameTime)
         {
-            this.m_buttonManager.UpdateButtons(gameTime, currentMouseState);
+            this.ActiveButtonManager.UpdateButtons(gameTime, currentMouseState);
 
             if (currentMouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released)
             {
@@ -62,8 +65,7 @@ namespace TileTest
         private void MouseClickResponse(MouseState currentMouseState, GameTime gameTime)
         {
             Debug.WriteLine("Click detected!");
-            if (this.m_mainGame.ActiveGameState == GameState.TitleScreen)
-                this.m_buttonManager.CheckIfButtonsClicked(currentMouseState);
+            this.ActiveButtonManager.CheckIfButtonsClicked(currentMouseState);
 
             if (this.ActiveGameState == GameState.PuzzleActive)
             {
@@ -82,21 +84,21 @@ namespace TileTest
 
         private void KeyPressResonse(KeyboardState previousKeyboardState, KeyboardState currentKeyboardState, GameTime gameTime)
         {
-            if (this.ActiveGameState == GameState.TitleScreen || this.ActiveGameState == GameState.PuzzleActive)
+            if (this.ActiveGameState == GameState.MainTitleScreen || this.ActiveGameState == GameState.PuzzleActive)
             {
                 if (currentKeyboardState.IsKeyDown(Keys.NumPad2) && !previousKeyboardState.IsKeyDown(Keys.NumPad2))
                 {
-                    this.MainGame.SetupTileGrid(2, this.MainGame.RandomPuzzleTexture);
+                    this.MainGame.SetupTileGrid(this.MainGame.RandomPuzzleTexture, 2);
                 }
 
                 if (currentKeyboardState.IsKeyDown(Keys.NumPad3) && !previousKeyboardState.IsKeyDown(Keys.NumPad3))
                 {
-                    this.MainGame.SetupTileGrid(3, this.MainGame.RandomPuzzleTexture);
+                    this.MainGame.SetupTileGrid(this.MainGame.RandomPuzzleTexture, 3);
                 }
 
                 if (currentKeyboardState.IsKeyDown(Keys.NumPad4) && !previousKeyboardState.IsKeyDown(Keys.NumPad4))
                 {
-                    this.MainGame.SetupTileGrid(4, this.MainGame.RandomPuzzleTexture);
+                    this.MainGame.SetupTileGrid(this.MainGame.RandomPuzzleTexture, 4);
                 }
             }
 
@@ -137,13 +139,11 @@ namespace TileTest
 
             if (currentKeyboardState.IsKeyDown(Keys.Escape) && !previousKeyboardState.IsKeyDown(Keys.Escape))
             {
-                if (this.ActiveGameState == GameState.TitleScreen)
+                if (this.ActiveGameState == GameState.MainTitleScreen)
                     this.MainGame.Exit();
                 else if (this.ActiveGameState == GameState.PuzzleActive)
                 {
-                    this.m_mainGame.m_graphics.IsFullScreen = false;
-                    this.m_mainGame.m_graphics.ApplyChanges();
-                    this.ActiveGameState = GameState.TitleScreen;
+                    this.ActiveGameState = GameState.AnimatedTitleScreen;
                 }
                     
             }

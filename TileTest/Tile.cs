@@ -12,9 +12,7 @@ namespace TileTest
     public class Tile : IGridMember
     {
 
-        private const int TILE_DIMENSION = 150;
-        private const int GRID_START_X = 150;
-        private const int GRID_START_Y = 150;
+        public const int TILE_CONTAINER_PADDING = 20;
         public const int TILE_PADDING = 5;
         public const int IMAGE_TOLERANCE = 5;
         public const int ANIMATION_TOLERANCE = 2;
@@ -22,8 +20,38 @@ namespace TileTest
         private const float DELTA_MULTIPLIER = 3.5f;
 
         private SpriteFont m_hintFont;
+        private TileTestGame m_maingame;
+        private int m_windowHeight;
+
+        private int GridStartX
+        {
+            get
+            {
+                int xPaddingPixels = this.m_windowHeight / 8 + TILE_CONTAINER_PADDING;
+                return xPaddingPixels;
+
+            }
+        }
+
+        private int GridStartY
+        {   get
+            {
+                int yPaddingPixels =  this.m_windowHeight / 8 + TILE_CONTAINER_PADDING;
+                return yPaddingPixels;
+            }
+        }
         public bool IsCurrentlySwappable { get; set; }
 
+        public int TileDimension
+        {
+            get 
+            {
+                int containerSize = 3 * this.m_windowHeight / 4;
+                int adjustedContainerSize = containerSize - (this.GridSize * TILE_PADDING) - (2 * TILE_CONTAINER_PADDING);
+                int tileDimensionPixels = adjustedContainerSize / this.GridSize;
+                return tileDimensionPixels;
+            }
+        }
         public bool IsInAnimation { get; set; }
         public Point CurrentGridPosition { get; set; }
         public Point CorrectGridPosition { get; set; }
@@ -38,8 +66,8 @@ namespace TileTest
         {
             get
             {
-                Vector2 drawTarget = new Vector2(GRID_START_X + (this.CurrentGridPosition.X * (TILE_DIMENSION + TILE_PADDING)),
-                    GRID_START_Y + (this.CurrentGridPosition.Y * (TILE_DIMENSION + TILE_PADDING)));
+                Vector2 drawTarget = new Vector2(this.GridStartX + (this.CurrentGridPosition.X * (this.TileDimension + TILE_PADDING)),
+                    this.GridStartY + (this.CurrentGridPosition.Y * (this.TileDimension + TILE_PADDING)));
 
                 return drawTarget;
             }
@@ -49,7 +77,7 @@ namespace TileTest
         {
             get
             {
-                Rectangle boundingRectangle = new Rectangle(new Point((int)this.TileFinalDrawPosition.X, (int)this.TileFinalDrawPosition.Y), new Point(TILE_DIMENSION, TILE_DIMENSION));
+                Rectangle boundingRectangle = new Rectangle(new Point((int)this.TileFinalDrawPosition.X, (int)this.TileFinalDrawPosition.Y), new Point(this.TileDimension, this.TileDimension));
 
                 return boundingRectangle;
             }
@@ -69,11 +97,11 @@ namespace TileTest
         {
             get
             {
-                return (float)this.PuzzleImageDimensions / (float)((TILE_DIMENSION + TILE_PADDING) * this.GridSize);
+                return (float)this.PuzzleImageDimensions / (float)((this.TileDimension + TILE_PADDING) * this.GridSize);
             }
         }
 
-        public Tile(Point correctPosition, int value, Texture2D puzzleImage, int gridSize, SpriteFont hintFont, Texture2D tileshadow)
+        public Tile(Point correctPosition, int value, Texture2D puzzleImage, int gridSize, SpriteFont hintFont, Texture2D tileshadow, TileTestGame mainGame)
         {
             this.CorrectGridPosition = correctPosition;
             this.CurrentGridPosition = correctPosition;
@@ -82,7 +110,8 @@ namespace TileTest
             this.m_tileShadowTexture = tileshadow;
             this.GridSize = gridSize;
             this.m_hintFont = hintFont;
-
+            this.m_maingame = mainGame;
+                
             this.m_tileAnimatedDrawPosition = this.TileFinalDrawPosition;
         }
 
@@ -91,20 +120,20 @@ namespace TileTest
             Rectangle destinationRectangle = new Rectangle(
                 (int)this.m_tileAnimatedDrawPosition.X, 
                 (int)this.m_tileAnimatedDrawPosition.Y, 
-                TILE_DIMENSION, 
-                TILE_DIMENSION);
+                this.TileDimension, 
+                this.TileDimension);
 
             Rectangle sourceRectangle = new Rectangle(
-                (int)(this.CorrectGridPosition.X * (TILE_DIMENSION * this.SourceScaleFactor + TILE_PADDING)), 
-                (int)(this.CorrectGridPosition.Y * (TILE_DIMENSION * this.SourceScaleFactor + TILE_PADDING)), 
-                (int)((TILE_DIMENSION) * this.SourceScaleFactor), 
-                (int)((TILE_DIMENSION) * this.SourceScaleFactor));
+                (int)(this.CorrectGridPosition.X * (this.TileDimension * this.SourceScaleFactor + TILE_PADDING)), 
+                (int)(this.CorrectGridPosition.Y * (this.TileDimension * this.SourceScaleFactor + TILE_PADDING)), 
+                (int)((this.TileDimension) * this.SourceScaleFactor), 
+                (int)((this.TileDimension) * this.SourceScaleFactor));
 
             Rectangle shadowDestinationRectangle = new Rectangle(
                 (int)this.m_tileAnimatedDrawPosition.X + 3,
                 (int)this.m_tileAnimatedDrawPosition.Y + 3,
-                TILE_DIMENSION + 1,
-                TILE_DIMENSION + 1);
+                this.TileDimension + 1,
+                this.TileDimension + 1);
 
             spriteBatch.Draw(this.m_tileShadowTexture, shadowDestinationRectangle, null, Color.White);
             spriteBatch.Draw(this.m_puzzleImage, destinationRectangle, sourceRectangle, Color.White);
@@ -113,6 +142,7 @@ namespace TileTest
 
         public void UpdateIt(GameTime gameTime)
         {
+            this.m_windowHeight = this.m_maingame.WindowHeight;
             float deltaX = this.m_tileAnimatedDrawPosition.X - this.TileFinalDrawPosition.X;
 
             if (!(Math.Abs(deltaX) <= ANIMATION_TOLERANCE))

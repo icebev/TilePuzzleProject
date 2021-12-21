@@ -7,14 +7,16 @@ namespace TileTest
 {
     public class Button
     {
-        private string m_buttonText;
+        protected string m_buttonText;
         public string m_buttonName;
-        private Vector2 m_position;
-        private bool m_isVisible = true;
-        private bool m_isHover = false;
-        private Color m_textColour = Color.White;
-        private bool m_hasBeenClicked;
-        private Vector2 m_windowScaleFactor;
+        protected Vector2 m_position;
+        protected bool m_isVisible = true;
+        protected bool m_isHover = false;
+        protected Color m_textColour = Color.White;
+        protected bool m_hasBeenClicked;
+        protected Vector2 m_windowScaleFactor;
+
+        public GameState[] m_visibleStates;
 
         public event EventHandler OnClick;
 
@@ -35,7 +37,7 @@ namespace TileTest
         public string ButtonText 
         {
             get { return this.m_buttonText; }
-            private set { this.m_buttonText = value; }
+            set { this.m_buttonText = value; }
         }
 
         public int ButtonWidth { get; private set; }
@@ -51,16 +53,17 @@ namespace TileTest
             }
         }
 
-        public Button(Vector2 position, int width, int height, string buttonName, string buttonText = "Undefined")
+        public Button(Vector2 position, int width, int height, GameState[] visibleStates, string buttonText = "Undefined")
         {
             this.m_windowScaleFactor = new Vector2(1, 1);
-            this.m_buttonName = buttonName;
             this.ButtonPosition = position;
             this.ButtonWidth = width;
             this.ButtonHeight = height;
             this.ButtonText = buttonText;
+
+            this.m_visibleStates = visibleStates;
         }
-        public void UpdateIt(GameTime gameTime, MouseState currentMouseState, Vector2 windowScaleFactor)
+        public virtual void UpdateIt(GameTime gameTime, MouseState currentMouseState, Vector2 windowScaleFactor)
         {
             this.m_windowScaleFactor = windowScaleFactor;
             if (this.IsVisible)
@@ -87,7 +90,7 @@ namespace TileTest
             }
             
         }
-        public void DrawIt(SpriteBatch spriteBatch, Texture2D normalTexture, Texture2D hoverTexture, Texture2D clickedTexture, SpriteFont font)
+        public virtual void DrawIt(SpriteBatch spriteBatch, Texture2D normalTexture, Texture2D hoverTexture, Texture2D clickedTexture, SpriteFont font)
         {
             //float xTarget = (this.ButtonPosition.X * windowScaleFactor.X);
             //float yTarget = (this.ButtonPosition.Y * windowScaleFactor.Y);
@@ -109,14 +112,14 @@ namespace TileTest
             spriteBatch.DrawString(font, this.ButtonText, new Vector2(x, y), this.m_textColour);
         }
 
-        public void DrawIt(SpriteBatch spriteBatch, Texture2D imageTexture)
+        public virtual void DrawIt(SpriteBatch spriteBatch, Texture2D imageTexture)
         {
             if (this.m_hasBeenClicked)
-                spriteBatch.Draw(imageTexture, new Rectangle((int)this.ButtonPosition.X, (int)this.ButtonPosition.Y, this.ButtonWidth, this.ButtonHeight), Color.Black);
+                spriteBatch.Draw(imageTexture, this.ButtonBounds, Color.Black);
             else if (!this.m_isHover)
-                spriteBatch.Draw(imageTexture, new Rectangle((int)this.ButtonPosition.X, (int)this.ButtonPosition.Y, this.ButtonWidth, this.ButtonHeight), Color.Gray);
+                spriteBatch.Draw(imageTexture, this.ButtonBounds, Color.Gray);
             else
-                spriteBatch.Draw(imageTexture, new Rectangle((int)this.ButtonPosition.X, (int)this.ButtonPosition.Y, this.ButtonWidth, this.ButtonHeight), Color.White);
+                spriteBatch.Draw(imageTexture, this.ButtonBounds, Color.White);
         }
 
 

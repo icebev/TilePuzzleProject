@@ -21,7 +21,7 @@ namespace TileTest
         private IGridMember[,] m_tilesArray;
         private List<IGridMember> m_tilesList;
 
-        private Texture2D m_puzzleImage;
+        public Texture2D m_puzzleImage;
         private Texture2D m_tileShadow;
         private SoundEffect m_tileSlideSfx;
         private SpriteFont m_font;
@@ -32,11 +32,15 @@ namespace TileTest
         private int m_moves = 0;
 
         private readonly Random m_random;
+        private TileTestGame m_mainGame;
 
         #endregion
 
         #region Properties
-
+        private TileTestGame MainGame
+        {
+            get { return this.m_mainGame; }
+        }
         public Point BlankTilePosition
         {
             get { return this.FindBlankTile(); }
@@ -68,10 +72,10 @@ namespace TileTest
 
         #endregion
 
-        public TileManager(int gridSize, Texture2D picture, SoundEffect slideSFX, SpriteFont font, Texture2D tileshadow)
+        public TileManager(TileTestGame mainGame, int gridSize, Texture2D picture, SoundEffect slideSFX, SpriteFont font, Texture2D tileshadow)
         {
             this.m_random = new Random();
-
+            this.m_mainGame = mainGame;
             this.m_puzzleImage = picture;
             this.m_tileShadow = tileshadow;
             this.m_tileSlideSfx = slideSFX;
@@ -91,7 +95,7 @@ namespace TileTest
             {
                 for (int x = 0; x < this.GridSize; x++)
                 {
-                    Tile newTile = new Tile(new Point(x, y), counter, this.m_puzzleImage, this.GridSize, this.m_font, this.m_tileShadow);
+                    Tile newTile = new Tile(new Point(x, y), counter, this.m_puzzleImage, this.GridSize, this.m_font, this.m_tileShadow, this.m_mainGame);
                     counter++;
                     if (!(x == maxArrayValue && y == maxArrayValue))
                     {
@@ -128,15 +132,15 @@ namespace TileTest
 
         public void DrawReferenceImage(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(this.m_tileShadow, new Rectangle(905, 105, 300, 300), Color.White);
-            spriteBatch.Draw(this.m_puzzleImage, new Rectangle(900, 100, 300, 300), Color.White);
+            spriteBatch.Draw(this.m_tileShadow, new Rectangle(this.MainGame.WindowCenter.X + 5 + this.MainGame.WindowHeight / 8, this.MainGame.WindowHeight / 8 + 20, this.MainGame.WindowHeight * 5 / 16 , this.MainGame.WindowHeight * 5 / 16), Color.White);
+            spriteBatch.Draw(this.m_puzzleImage, new Rectangle(this.MainGame.WindowCenter.X + this.MainGame.WindowHeight / 8, this.MainGame.WindowHeight / 8 + 15, this.MainGame.WindowHeight * 5 / 16, this.MainGame.WindowHeight * 5 / 16), Color.White);
         }
 
         public void DrawScore(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(this.m_font, $"Moves: {this.m_moves}", new Vector2(900, 600), Color.White);
-            if (this.m_puzzleComplete)
-                spriteBatch.DrawString(this.m_font, $"Puzzle complete!", new Vector2(900, 500), Color.White);
+            //spriteBatch.DrawString(this.m_font, $"Moves: {this.m_moves}", new Vector2(this.MainGame.WindowCenter.X + 20 + this.MainGame.WindowHeight * 7 / 16, this.MainGame.WindowHeight / 8 + 60), Color.White);
+            //if (this.m_puzzleComplete)
+                //spriteBatch.DrawString(this.m_font, $"Puzzle complete!", new Vector2(900, 500), Color.White);
         }
 
         public Point FindBlankTile()

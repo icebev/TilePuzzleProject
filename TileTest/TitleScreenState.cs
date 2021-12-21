@@ -10,6 +10,7 @@ namespace TileTest
     {
         Animated,
         Main,
+        Instructions,
         Credits
     }
 }

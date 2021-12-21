@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace TileTest
 {
@@ -33,7 +34,7 @@ namespace TileTest
         private GameState m_gameState;
         private TileManager m_tileManager;
         private InputManager m_inputManager;
-        public InterfaceRenderer m_interfaceRenderer;
+        private InterfaceRenderer m_interfaceRenderer;
         private readonly Random m_random;
 
         private KeyboardState m_currentKeyboardState;
@@ -41,6 +42,8 @@ namespace TileTest
 
         private MouseState m_currentMouseState;
         private MouseState m_previousMouseState;
+
+        private int m_tileGridSize = 3;
         
 
         #endregion
@@ -52,6 +55,12 @@ namespace TileTest
         {
             get { return this.m_spriteBatch; }
         }
+
+        public int CurrentGridSize
+        {
+            get { return this.m_tileGridSize; }
+            set { this.m_tileGridSize = value; }
+        }
         public TileManager ActiveTileManager
         {
             get { return this.m_tileManager; }
@@ -59,6 +68,15 @@ namespace TileTest
             private set { this.m_tileManager = value; }
         }
 
+        public InputManager ActiveInputManager
+        {
+            get { return this.m_inputManager; }
+        } 
+        
+        public InterfaceRenderer ActiveInterfaceRenderer
+        {
+            get { return this.m_interfaceRenderer; }
+        }
         public GameState ActiveGameState
         {
             get { return this.m_gameState; }
@@ -114,7 +132,7 @@ namespace TileTest
             this.m_graphics = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
             this.m_random = new Random();
-            this.ActiveGameState = GameState.TitleScreen;
+            this.ActiveGameState = GameState.AnimatedTitleScreen;
         }
 
         /// <summary>
@@ -180,14 +198,17 @@ namespace TileTest
         }
 
         // SetupTileGrid function creates a new TileManager object with a specified gridSize and puzzle image texture and will be stored in the ActiveTileManager for reference
-        public void SetupTileGrid(int gridSize, Texture2D puzzleImage)
+        public void SetupTileGrid(Texture2D puzzleImage, int gridSizeOverride = 0)
         {
-            this.ActiveTileManager = new TileManager(gridSize, puzzleImage, this.m_tileSlideSFX, this.m_bahnschriftFont, this.m_tileShadowTexture);
+            if (gridSizeOverride > 1)
+            {
+                this.CurrentGridSize = gridSizeOverride;
+            }
+            this.ActiveTileManager = new TileManager(this, this.CurrentGridSize, puzzleImage, this.m_tileSlideSFX, this.m_bahnschriftFont, this.m_tileShadowTexture);
             this.ActiveTileManager.GenerateTiles();
             this.ActiveTileManager.JumbleTiles();
-            this.ActiveGameState = GameState.PuzzleActive;
+            //this.ActiveGameState = GameState.PuzzleActive;
         }
-
         public Vector2 GetWindowScaleFactor()
         {
             var scaleFactorX = (float)this.WindowWidth / (float)WINDOW_STARTING_WIDTH;
@@ -214,24 +235,17 @@ namespace TileTest
             this.m_currentKeyboardState = Keyboard.GetState();
             this.m_currentMouseState = Mouse.GetState();
 
-
-
             // TODO: Add your update logic here
-      
             if (this.ActiveTileManager != null)
             {
                 this.ActiveTileManager.UpdateTiles(gameTime);
                 this.ActiveTileManager.CheckPuzzleCompletion();
             }
 
-            
-
-            this.m_inputManager.ProcessControls(this.m_previousMouseState, this.m_currentMouseState, 
+            this.ActiveInputManager.ProcessControls(this.m_previousMouseState, this.m_currentMouseState, 
                 this.m_previousKeyboardState, this.m_currentKeyboardState, gameTime);
 
-
-
-            this.m_interfaceRenderer.UpdateIt(gameTime);
+            this.ActiveInterfaceRenderer.UpdateIt(gameTime);
 
             // Store the input states for reference in the next update method, used to make sure that the keys or mouse cannot be held down to break the game
             this.m_previousKeyboardState = Keyboard.GetState();
@@ -250,30 +264,26 @@ namespace TileTest
 
             // TODO: Add your drawing code here
             this.MainSpriteBatch.Begin();
-            if (this.ActiveGameState == GameState.TitleScreen)
-            {
-                this.MainSpriteBatch.Draw(this.m_titleBackgroundTexture, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
-                this.m_interfaceRenderer.DrawInterface(this.MainSpriteBatch);
-                //this.m_buttonManager.DrawButtons(this.MainSpriteBatch);
-                this.m_inputManager.DrawIt(this.MainSpriteBatch);
 
-    }
+            // Draw the correct background based off the state
+            if ((int)this.ActiveGameState <= 4)
+                this.MainSpriteBatch.Draw(this.m_titleBackgroundTexture, new Rectangle(0, 0, this.WindowWidth, this.WindowHeight), Color.White);
+            else
+                this.MainSpriteBatch.Draw(this.m_puzzleBackgroundTexture, new Rectangle(0, 0, this.WindowWidth, this.WindowHeight), Color.White);
+
+            this.m_interfaceRenderer.DrawInterface(this.MainSpriteBatch);
+
             if (this.ActiveGameState == GameState.PuzzleActive)
-            {
-                this.MainSpriteBatch.Draw(this.m_puzzleBackgroundTexture, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
-                this.m_interfaceRenderer.DrawInterface(this.MainSpriteBatch);
+            { 
                 this.ActiveTileManager.DrawScore(this.MainSpriteBatch);
                 this.ActiveTileManager.DrawTiles(this.MainSpriteBatch);
                 this.ActiveTileManager.DrawReferenceImage(this.MainSpriteBatch);
             }
-            if (this.ActiveGameState == GameState.PuzzleSelect)
-            {
-                this.MainSpriteBatch.Draw(this.m_puzzleBackgroundTexture, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
-                this.m_interfaceRenderer.DrawInterface(this.MainSpriteBatch);
-            }
+
+            this.m_inputManager.DrawIt(this.MainSpriteBatch);
 
 
-                this.MainSpriteBatch.End();
+            this.MainSpriteBatch.End();
 
             base.Draw(gameTime);
         }
