@@ -23,7 +23,7 @@ namespace TileTest
         {
             get { return this.MainGame.ActiveTileManager;  }
         }
-        private ButtonManager ActiveButtonManager
+        public ButtonManager ActiveButtonManager
         {
             get { return this.m_buttonManager;  }
         }

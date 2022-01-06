@@ -20,6 +20,8 @@ namespace TileTest
 
         public event EventHandler OnClick;
 
+        public bool IsHover { get { return this.m_isHover; } }
+
 
 
         public Vector2 ButtonPosition
@@ -124,11 +126,15 @@ namespace TileTest
 
 
 
-        public bool CheckIfClicked(MouseState currentMouseState)
+        public virtual bool CheckIfClicked(MouseState currentMouseState)
         {
             if (this.ButtonBounds.Contains(currentMouseState.Position))
             {
                 this.m_hasBeenClicked = true;
+                if (!AudioStore.m_isMuted)
+                {
+                    AudioStore.m_clickOnSFX.Play();
+                }
                 //OnClick?.Invoke(this, new EventArgs());
                 return true;
             }

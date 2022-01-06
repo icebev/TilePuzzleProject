@@ -49,13 +49,21 @@ namespace TileTest
                 this.m_imageSelectButtons.Add(newImageButton);
             }
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 3; i < 6; i++)
             {
-                string text = $"{i + 3} x {i + 3}";
-                var newDifficiltyButton = new ToggleButton(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH / 2 + (200 * i), 300), 200, 100, new GameState[] { GameState.OptionsScreen }, text);
+                string text = $"{i} x {i}";
+                var newDifficiltyButton = new ToggleButton(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH / 2 + (175 * (i - 3)), 200), 175, 100, new GameState[] { GameState.OptionsScreen }, text);
                 newDifficiltyButton.OnToggle += this.DifficultyButton_OnToggle;
+                if ((i) == this.MainGame.CurrentGridSize)
+                    newDifficiltyButton.ToggledState = true;
                 this.m_difficultyToggleButtons.Add(newDifficiltyButton);
+                
             }
+
+            var toggleHintsButton = new ToggleButton(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH / 2 + 163, 350), 200, 100, new GameState[] { GameState.OptionsScreen }, "Off");
+            toggleHintsButton.OnToggle += this.ToggleHintsButton_OnToggle;
+            var toggleTimerButton = new ToggleButton(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH / 2 + 163, 500), 200, 100, new GameState[] { GameState.OptionsScreen }, "Off");
+            toggleTimerButton.OnToggle += this.ToggleTimerButton_OnToggle;
 
             var titleScreenButton = new Button(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH / 2 - 200, 400), 400, 100, new GameState[1] { GameState.MainTitleScreen }, "Start Game");
             titleScreenButton.OnClick += this.GoToPuzzleSelect_OnClick;
@@ -70,6 +78,7 @@ namespace TileTest
             backButton.OnClick += this.BackButton_OnClick;
 
             var fullScreenButton = new ToggleButton(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH - 600, 15), 250, 55, new GameState[2] { GameState.MainTitleScreen, GameState.PuzzleActive }, "Fullscreen");
+            fullScreenButton.ToggledState = true;
             fullScreenButton.OnToggle += this.FullScreenButton_OnToggle;            
             
             var muteButton = new ToggleButton(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH - 300, 15), 250, 55, new GameState[2] { GameState.MainTitleScreen, GameState.PuzzleActive }, "Mute");
@@ -85,7 +94,7 @@ namespace TileTest
             shuffleButton.OnClick += this.ShuffleButton_OnClick;
 
             var puzzleSelectButton = new Button(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH / 2 + 412 - 150, 615), 300, 70, new GameState[1] { GameState.PuzzleActive }, "Puzzle Select");
-            puzzleSelectButton.OnClick += GoToPuzzleSelect_OnClick;
+            puzzleSelectButton.OnClick += this.GoToPuzzleSelect_OnClick;
 
             var optionsButton = new Button(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH / 2 + 412 - 150, 705), 300, 70, new GameState[1] { GameState.PuzzleActive }, "Options");
             optionsButton.OnClick += this.OptionsButton_OnClick;
@@ -102,12 +111,28 @@ namespace TileTest
                 backButton,
                 shuffleButton,
                 optionsButton,
-                puzzleSelectButton
+                puzzleSelectButton,
+                toggleHintsButton,
+                toggleTimerButton
             };
 
             //this.testImageButton = new Button(new Vector2(300, 500), 100, 100, "testimage");
             //this.testImageButton.OnClick += this.TitleScreenButton_OnClick;
 
+        }
+
+        private void ToggleTimerButton_OnToggle(object sender, EventArgs e)
+        {
+            ToggleButton senderButton = (ToggleButton)sender;
+            this.MainGame.ShowTimer = senderButton.ToggledState;
+            senderButton.ButtonText = senderButton.ToggledState ? "On" : "Off";
+        }
+
+        private void ToggleHintsButton_OnToggle(object sender, EventArgs e)
+        {
+            ToggleButton senderButton = (ToggleButton)sender;
+            this.MainGame.ShowTileNumbers = senderButton.ToggledState;
+            senderButton.ButtonText = senderButton.ToggledState ? "On" : "Off";
         }
 
         private void DifficultyButton_OnToggle(object sender, EventArgs e)
@@ -189,6 +214,8 @@ namespace TileTest
         private void MuteButton_OnToggle(object sender, EventArgs e)
         {
             ToggleButton senderButton = (ToggleButton)sender;
+            this.MainGame.IsMuted = senderButton.ToggledState;
+            AudioStore.m_isMuted = senderButton.ToggledState;
             if (senderButton.ToggledState)
             {
                 senderButton.ButtonText = "Unmute";
@@ -204,14 +231,23 @@ namespace TileTest
         private void FullScreenButton_OnToggle (object sender, EventArgs e)
         {
             
-            this.MainGame.m_graphics.IsFullScreen = !this.MainGame.m_graphics.IsFullScreen;
-            this.MainGame.m_graphics.ApplyChanges();
 
             ToggleButton senderButton = (ToggleButton)sender;
+            this.MainGame.m_graphics.IsFullScreen = senderButton.ToggledState;
             if (senderButton.ToggledState)
-                senderButton.ButtonText = "Windowed";
+            {
+                //senderButton.ButtonText = "Fullscreen";
+                this.MainGame.m_graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+                this.MainGame.m_graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            }
             else
-                senderButton.ButtonText = "Fullscreen";
+            {
+                //senderButton.ButtonText = "Windowed";
+                this.MainGame.m_graphics.PreferredBackBufferWidth = 1600;
+                this.MainGame.m_graphics.PreferredBackBufferHeight = 900;
+            }
+
+            this.MainGame.m_graphics.ApplyChanges();
         }
 
         private void GoToPuzzleSelect_OnClick(object sender, EventArgs e)

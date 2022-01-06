@@ -20,7 +20,8 @@ namespace TileTest
         private const float DELTA_MULTIPLIER = 3.5f;
 
         private SpriteFont m_hintFont;
-        private TileTestGame m_maingame;
+        private TileTestGame m_mainGame;
+        private int m_windowWidth;
         private int m_windowHeight;
 
         private int GridStartX
@@ -46,7 +47,8 @@ namespace TileTest
         {
             get 
             {
-                int containerSize = 3 * this.m_windowHeight / 4;
+                int shorterSide = (this.m_windowWidth * 2 / 3 < this.m_windowHeight) ? this.m_windowWidth * 3 / 5 : this.m_windowHeight;
+                int containerSize = 3 * shorterSide / 4;
                 int adjustedContainerSize = containerSize - (this.GridSize * TILE_PADDING) - (2 * TILE_CONTAINER_PADDING);
                 int tileDimensionPixels = adjustedContainerSize / this.GridSize;
                 return tileDimensionPixels;
@@ -101,6 +103,8 @@ namespace TileTest
             }
         }
 
+        public TileTestGame MainGame { get => this.m_mainGame; }
+
         public Tile(Point correctPosition, int value, Texture2D puzzleImage, int gridSize, SpriteFont hintFont, Texture2D tileshadow, TileTestGame mainGame)
         {
             this.CorrectGridPosition = correctPosition;
@@ -110,7 +114,7 @@ namespace TileTest
             this.m_tileShadowTexture = tileshadow;
             this.GridSize = gridSize;
             this.m_hintFont = hintFont;
-            this.m_maingame = mainGame;
+            this.m_mainGame = mainGame;
                 
             this.m_tileAnimatedDrawPosition = this.TileFinalDrawPosition;
         }
@@ -137,12 +141,19 @@ namespace TileTest
 
             spriteBatch.Draw(this.m_tileShadowTexture, shadowDestinationRectangle, null, Color.White);
             spriteBatch.Draw(this.m_puzzleImage, destinationRectangle, sourceRectangle, Color.White);
-            spriteBatch.DrawString(this.m_hintFont, $"{this.m_positionValue}", new Vector2(this.m_tileAnimatedDrawPosition.X + 50, this.m_tileAnimatedDrawPosition.Y + 50), Color.White);
+
+            if (this.MainGame.ShowTileNumbers)
+                spriteBatch.DrawString(this.m_hintFont, $"{this.m_positionValue}", 
+                    new Vector2(this.m_tileAnimatedDrawPosition.X + this.TileDimension / 2 - this.m_hintFont.MeasureString($"{this.m_positionValue}").X / 2,
+                    this.m_tileAnimatedDrawPosition.Y + this.TileDimension / 2 - this.m_hintFont.MeasureString($"{this.m_positionValue}").Y / 2), 
+                    Color.White);
         }
 
         public void UpdateIt(GameTime gameTime)
         {
-            this.m_windowHeight = this.m_maingame.WindowHeight;
+            this.m_windowWidth = this.MainGame.WindowWidth;
+            this.m_windowHeight = this.MainGame.WindowHeight;
+            
             float deltaX = this.m_tileAnimatedDrawPosition.X - this.TileFinalDrawPosition.X;
 
             if (!(Math.Abs(deltaX) <= ANIMATION_TOLERANCE))

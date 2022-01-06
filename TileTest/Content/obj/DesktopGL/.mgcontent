@@ -4,7 +4,6 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/audio/slide.mp3</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/fonts/bahnschrift.spritefont</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/backgrounds/puzzleBackground.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/backgrounds/titleBackground.png</File>
@@ -19,14 +18,19 @@
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/puzzles/oketra.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/puzzles/sunset.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/puzzles/tinybones.png</File>
-    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/interface/obelisks.png</File>
-    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/interface/sandy.png</File>
-    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/interface/squareContainer.png</File>
-    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/shadows/buttonShadow.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/shadows/obelisksShadow.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/shadows/sandyShadow.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/shadows/squareContainerShadow.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/shadows/tileShadow.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/button/normal.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/audio/SFX/clickOff.wav</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/audio/SFX/clickOn.wav</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/audio/SFX/slide.wav</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/audio/music/nileJourneyMusicAmbience.mp3</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/interface/obelisks.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/interface/sandy.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/interface/sandyBanner.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/interface/screenDimmer.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/interface/squareContainer.png</File>
   </SourceFiles>
 </SourceFileCollection>

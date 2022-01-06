@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,7 +28,7 @@ namespace TileTest
         private Texture2D m_titleBackgroundTexture;
         private Texture2D m_puzzleBackgroundTexture;
         private Texture2D m_tileShadowTexture;
-        private SoundEffect m_tileSlideSFX;
+       
 
         public SpriteFont m_bahnschriftFont;
 
@@ -44,7 +45,10 @@ namespace TileTest
         private MouseState m_previousMouseState;
 
         private int m_tileGridSize = 3;
-        
+        private bool m_showNumbers;
+        private bool m_showTimer;
+        private bool m_isMuted;
+        private HighscoreTracker m_highscoreTracker;
 
         #endregion
 
@@ -61,6 +65,25 @@ namespace TileTest
             get { return this.m_tileGridSize; }
             set { this.m_tileGridSize = value; }
         }
+
+        public bool ShowTileNumbers
+        {
+            get { return this.m_showNumbers; }
+            set { this.m_showNumbers = value; }
+        }
+
+        public bool ShowTimer
+        {
+            get { return this.m_showTimer; }
+            set { this.m_showTimer = value; }
+        }
+
+        public bool IsMuted
+        {
+            get { return this.m_isMuted; }
+            set { this.m_isMuted = value; }
+        }
+
         public TileManager ActiveTileManager
         {
             get { return this.m_tileManager; }
@@ -121,7 +144,9 @@ namespace TileTest
             }
         }
 
- 
+        public HighscoreTracker ActiveHighscoreTracker { get => this.m_highscoreTracker; }
+
+
 
 
         #endregion
@@ -146,8 +171,8 @@ namespace TileTest
             // TODO: Add your initialization logic here
             //this.graphics.IsFullScreen = true;
             // Sets up the desired window resolution
-            this.m_graphics.PreferredBackBufferWidth = WINDOW_STARTING_WIDTH;
-            this.m_graphics.PreferredBackBufferHeight = WINDOW_STARTING_HEIGHT;
+            this.m_graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            this.m_graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height; 
             // Allow user to resize the window
             this.Window.AllowUserResizing = true;
             this.m_graphics.ApplyChanges();
@@ -175,12 +200,21 @@ namespace TileTest
             this.m_titleBackgroundTexture = this.Content.Load<Texture2D>("textures/backgrounds/titleBackground");
             this.m_puzzleBackgroundTexture = this.Content.Load<Texture2D>("textures/backgrounds/puzzleBackground");
             this.m_tileShadowTexture = this.Content.Load<Texture2D>("textures/shadows/tileShadow");
-            this.m_tileSlideSFX = this.Content.Load<SoundEffect>("audio/slide");
+            AudioStore.m_tileSlideSFX = this.Content.Load<SoundEffect>("audio/SFX/slide");
+            AudioStore.m_clickOnSFX = this.Content.Load<SoundEffect>("audio/SFX/clickOn");
+            AudioStore.m_clickOffSFX = this.Content.Load<SoundEffect>("audio/SFX/clickOff");
+
+            AudioStore.m_nileJourneyMusic = this.Content.Load<Song>("audio/music/nileJourneyMusicAmbience");
+            MediaPlayer.Volume = 0;
+
+
             this.m_bahnschriftFont = this.Content.Load<SpriteFont>("fonts/bahnschrift");
             this.m_inputManager = new InputManager(this, this.ActiveTileManager);
             this.m_interfaceRenderer = new InterfaceRenderer(this, this.m_bahnschriftFont);
             this.m_interfaceRenderer.LoadTextures();
             //this.m_buttonManager = new ButtonManager(this);
+
+            this.m_highscoreTracker = HighscoreTracker.Load();
 
         }
 
@@ -204,7 +238,7 @@ namespace TileTest
             {
                 this.CurrentGridSize = gridSizeOverride;
             }
-            this.ActiveTileManager = new TileManager(this, this.CurrentGridSize, puzzleImage, this.m_tileSlideSFX, this.m_bahnschriftFont, this.m_tileShadowTexture);
+            this.ActiveTileManager = new TileManager(this, this.CurrentGridSize, puzzleImage, this.m_bahnschriftFont, this.m_tileShadowTexture);
             this.ActiveTileManager.GenerateTiles();
             this.ActiveTileManager.JumbleTiles();
             //this.ActiveGameState = GameState.PuzzleActive;
@@ -234,12 +268,30 @@ namespace TileTest
             // Update member variables with the current input states of the keyboard and mouse
             this.m_currentKeyboardState = Keyboard.GetState();
             this.m_currentMouseState = Mouse.GetState();
+            if (this.ActiveGameState != GameState.AnimatedTitleScreen)
+            {
+                if (this.IsMuted)
+                {
+                    MediaPlayer.Volume = 0;
+                }
+                else
+                {
+                    if (MediaPlayer.State != MediaState.Playing)
+                    {
+                        MediaPlayer.Play(AudioStore.m_nileJourneyMusic);
+                        MediaPlayer.IsRepeating = true;
+
+                    }
+
+                    MediaPlayer.Volume = 0.2f;
+                }
+            }
 
             // TODO: Add your update logic here
             if (this.ActiveTileManager != null)
             {
                 this.ActiveTileManager.UpdateTiles(gameTime);
-                this.ActiveTileManager.CheckPuzzleCompletion();
+                //this.ActiveTileManager.CheckPuzzleCompletion();
             }
 
             this.ActiveInputManager.ProcessControls(this.m_previousMouseState, this.m_currentMouseState, 
@@ -275,7 +327,6 @@ namespace TileTest
 
             if (this.ActiveGameState == GameState.PuzzleActive)
             { 
-                this.ActiveTileManager.DrawScore(this.MainSpriteBatch);
                 this.ActiveTileManager.DrawTiles(this.MainSpriteBatch);
                 this.ActiveTileManager.DrawReferenceImage(this.MainSpriteBatch);
             }

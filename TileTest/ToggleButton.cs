@@ -69,5 +69,26 @@ namespace TileTest
 
             spriteBatch.DrawString(font, this.ButtonText, new Vector2(x, y), this.m_textColour);
         }
+
+        public override bool CheckIfClicked(MouseState currentMouseState)
+        {
+            if (this.ButtonBounds.Contains(currentMouseState.Position))
+            {
+                this.m_hasBeenClicked = true;
+                if (!AudioStore.m_isMuted)
+                {
+                    if (!this.ToggledState)
+                        AudioStore.m_clickOnSFX.Play();
+                    else
+                        AudioStore.m_clickOffSFX.Play();
+                }
+                //OnClick?.Invoke(this, new EventArgs());
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

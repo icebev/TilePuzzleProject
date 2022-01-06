@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfScoreEntry xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ScoreEntry>
+    <GridSize>3</GridSize>
+    <PuzzleImageIndex>4</PuzzleImageIndex>
+    <BestMoves>37</BestMoves>
+    <BestTime>22</BestTime>
+  </ScoreEntry>
+  <ScoreEntry>
+    <GridSize>3</GridSize>
+    <PuzzleImageIndex>4</PuzzleImageIndex>
+    <BestMoves>30</BestMoves>
+    <BestTime>16</BestTime>
+  </ScoreEntry>
+  <ScoreEntry>
+    <GridSize>3</GridSize>
+    <PuzzleImageIndex>8</PuzzleImageIndex>
+    <BestMoves>40</BestMoves>
+    <BestTime>19</BestTime>
+  </ScoreEntry>
+  <ScoreEntry>
+    <GridSize>4</GridSize>
+    <PuzzleImageIndex>6</PuzzleImageIndex>
+    <BestMoves>288</BestMoves>
+    <BestTime>184</BestTime>
+  </ScoreEntry>
+  <ScoreEntry>
+    <GridSize>3</GridSize>
+    <PuzzleImageIndex>6</PuzzleImageIndex>
+    <BestMoves>44</BestMoves>
+    <BestTime>25</BestTime>
+  </ScoreEntry>
+  <ScoreEntry>
+    <GridSize>3</GridSize>
+    <PuzzleImageIndex>5</PuzzleImageIndex>
+    <BestMoves>92</BestMoves>
+    <BestTime>88</BestTime>
+  </ScoreEntry>
+  <ScoreEntry>
+    <GridSize>3</GridSize>
+    <PuzzleImageIndex>1</PuzzleImageIndex>
+    <BestMoves>44</BestMoves>
+    <BestTime>39</BestTime>
+  </ScoreEntry>
+</ArrayOfScoreEntry>
