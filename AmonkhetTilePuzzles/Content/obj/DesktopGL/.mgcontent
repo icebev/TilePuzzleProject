@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Profile>Reach</Profile>
+  <Platform>DesktopGL</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/fonts/bahnschrift.spritefont</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/backgrounds/puzzleBackground.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/backgrounds/titleBackground.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/button/click.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/button/hover.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/puzzles/accursed.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/puzzles/archfiend.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/puzzles/building.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/puzzles/glorybringer.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/puzzles/kefnet.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/puzzles/mightyleap.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/puzzles/oketra.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/puzzles/sunset.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/puzzles/tinybones.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/shadows/obelisksShadow.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/shadows/sandyShadow.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/shadows/squareContainerShadow.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/shadows/tileShadow.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/button/normal.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/audio/SFX/clickOff.wav</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/audio/SFX/clickOn.wav</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/audio/SFX/slide.wav</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/audio/music/nileJourneyMusicAmbience.mp3</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/interface/obelisks.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/interface/sandy.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/interface/sandyBanner.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/interface/screenDimmer.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/interface/squareContainer.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/shadows/sandyBannerShadow.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/audio/SFX/puzzleComplete.wav</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/fonts/calligraphic.spritefont</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/AmonkhetTilePuzzles/Content/textures/interface/trophy.png</File>
+  </SourceFiles>
+</SourceFileCollection>
