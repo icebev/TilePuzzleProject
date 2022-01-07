@@ -145,7 +145,9 @@ namespace TileTest
         }
         public void UpdateTiles(GameTime gameTime)
         {
-            this.m_secondsElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (!this.m_puzzleComplete)
+                this.m_secondsElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             foreach (IGridMember tile in this.m_tilesArray)
             {
                 if (tile.GetType().ToString() == "TileTest.Tile")
@@ -154,11 +156,14 @@ namespace TileTest
         }
         public void DrawTiles(SpriteBatch spriteBatch)
         {
-            foreach (IGridMember tile in this.m_tilesArray)
+            if (!this.m_puzzleComplete)
             {
-                if (tile != null)
-                    if (tile.GetType().ToString() == "TileTest.Tile")
-                        tile.DrawIt(spriteBatch);
+                foreach (IGridMember tile in this.m_tilesArray)
+                {
+                    if (tile != null)
+                        if (tile.GetType().ToString() == "TileTest.Tile")
+                            tile.DrawIt(spriteBatch);
+                }
             }
         }
 
@@ -208,7 +213,7 @@ namespace TileTest
         public void SwapTile(IGridMember tileToSwap)
         {
             if (this.m_shouldPlaySfx && !this.MainGame.IsMuted)
-                AudioStore.m_tileSlideSFX.Play(volume: 0.7f, pitch: 0.0f, pan: 0.0f);
+                AudioStore.m_tileSlideSFX.Play(volume: 0.5f, pitch: 0.0f, pan: 0.0f);
 
             Point newBlankPosition = new Point(tileToSwap.CurrentGridPosition.X, tileToSwap.CurrentGridPosition.Y);
 
@@ -243,6 +248,7 @@ namespace TileTest
             this.IsShuffling = false;
             this.MoveCount = 0;
             this.m_secondsElapsed = 0;
+            this.m_puzzleComplete = false;
         }
 
         public bool CheckPuzzleCompletion()
@@ -260,6 +266,9 @@ namespace TileTest
             
             this.MainGame.ActiveHighscoreTracker.UpdateScoreEntry(this.GridSize, this.PuzzleImageIndex, this.MoveCount, this.TotalSecondsElapsed);
             HighscoreTracker.Save(this.MainGame.ActiveHighscoreTracker);
+            this.MainGame.ActiveGameState = GameState.PuzzleComplete;
+            if (!this.MainGame.IsMuted)
+                AudioStore.m_puzzleCompleteSFX.Play(volume: 0.5f, pitch: 0.0f, pan: 0.0f);
             return true;
 
         }

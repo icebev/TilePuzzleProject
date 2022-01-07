@@ -24,7 +24,7 @@ namespace TileTest
         private int m_windowWidth;
         private int m_windowHeight;
 
-        private int GridStartX
+        public int GridStartX
         {
             get
             {
@@ -34,7 +34,7 @@ namespace TileTest
             }
         }
 
-        private int GridStartY
+        public int GridStartY
         {   get
             {
                 int yPaddingPixels =  this.m_windowHeight / 8 + TILE_CONTAINER_PADDING;
@@ -57,6 +57,7 @@ namespace TileTest
         public bool IsInAnimation { get; set; }
         public Point CurrentGridPosition { get; set; }
         public Point CorrectGridPosition { get; set; }
+
         public int m_positionValue;
         public int GridSize { get; set; }
 

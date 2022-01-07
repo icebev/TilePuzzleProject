@@ -64,3 +64,7 @@ C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzle
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\audio\music\nileJourneyMusicAmbience.xnb
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\interface\sandyBanner.xnb
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\interface\screenDimmer.xnb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\shadows\sandyBannerShadow.xnb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\audio\SFX\puzzleComplete.xnb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\textures\interface\trophy.xnb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\TileTest\bin\DesktopGL\AnyCPU\Debug\Content\fonts\calligraphic.xnb

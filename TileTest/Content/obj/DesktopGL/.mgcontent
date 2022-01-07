@@ -32,5 +32,9 @@
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/interface/sandyBanner.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/interface/screenDimmer.png</File>
     <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/interface/squareContainer.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/shadows/sandyBannerShadow.png</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/audio/SFX/puzzleComplete.wav</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/fonts/calligraphic.spritefont</File>
+    <File>C:/Users/joebe/OneDrive/Documents/BirminghamCityUni/Module2Assessment/TilePuzzleProject/TilePuzzleProject/TileTest/Content/textures/interface/trophy.png</File>
   </SourceFiles>
 </SourceFileCollection>

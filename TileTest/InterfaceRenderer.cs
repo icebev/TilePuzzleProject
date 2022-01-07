@@ -17,9 +17,11 @@ namespace TileTest
 
         private Texture2D m_obelisks;
         private Texture2D m_sandy;
+        private Texture2D m_sandyBanner;
         private Texture2D m_squareContainer;
 
         private Texture2D m_obelisksShadow;
+        private Texture2D m_sandyBannerShadow;
         private Texture2D m_sandyShadow;
         private Texture2D m_squareContainerShadow;
 
@@ -28,7 +30,20 @@ namespace TileTest
         private float m_obelisksScale = 0;
         private float m_obelisksIncrement = 0.01f;
 
+        private float m_bannerYPosition = -300;
+        private float m_shiftMultiplier = 0.05f;
+        private int m_bannerYTarget
+        {
+            get
+            {
+                int val = this.MainGame.WindowHeight / 2 - 300;
+                return val;
+            }
+        }
+
         private TitleScreenState m_titleState = TitleScreenState.Animated;
+        private Texture2D m_screenDimmer;
+        private Texture2D m_trophy;
 
         private TileTestGame MainGame
         {
@@ -59,6 +74,12 @@ namespace TileTest
             this.m_obelisks = this.MainGame.Content.Load<Texture2D>("textures/interface/obelisks");
             this.m_obelisksShadow = this.MainGame.Content.Load<Texture2D>("textures/shadows/obelisksShadow");
 
+            this.m_sandyBanner = this.MainGame.Content.Load<Texture2D>("textures/interface/sandyBanner");
+            this.m_sandyBannerShadow = this.MainGame.Content.Load<Texture2D>("textures/shadows/sandyBannerShadow");
+
+            this.m_screenDimmer = this.MainGame.Content.Load<Texture2D>("textures/interface/screenDimmer");
+
+            this.m_trophy = this.MainGame.Content.Load<Texture2D>("textures/interface/trophy");
         }
 
         public void DrawInterface(SpriteBatch spriteBatch)
@@ -76,7 +97,7 @@ namespace TileTest
                 if (this.ActiveGameState == GameState.MainTitleScreen)
                 {
                     string text = "Amonkhet Tile Puzzles";
-                    spriteBatch.DrawString(this.m_bahnschriftFont, text, new Vector2((this.MainGame.WindowWidth / 2 - (int)(this.m_bahnschriftFont.MeasureString(text).X * 0.5)), this.MainGame.WindowHeight / 3), Color.White);
+                    spriteBatch.DrawString(this.m_bahnschriftFont, text, new Vector2((this.MainGame.WindowWidth / 2), this.MainGame.WindowHeight / 3),  Color.White, 0, new Vector2((float)(this.m_bahnschriftFont.MeasureString(text).X * 0.5), (float)(this.m_bahnschriftFont.MeasureString(text).Y * 0.5)), 1.75f, SpriteEffects.None, 1.0f);
                 }
             }
             else if ((this.ActiveGameState == GameState.Credits || this.ActiveGameState == GameState.Instructions) || this.ActiveGameState == GameState.OptionsScreen)
@@ -97,6 +118,8 @@ namespace TileTest
                 int containerSize = 3 * shorterSide / 4;
                 spriteBatch.Draw(this.m_squareContainerShadow, new Rectangle(this.MainGame.WindowHeight / 8 + SHADOW_OFFSET, this.MainGame.WindowHeight / 8 + SHADOW_OFFSET, containerSize, containerSize), Color.White);
                 spriteBatch.Draw(this.m_squareContainer, new Rectangle(this.MainGame.WindowHeight / 8, this.MainGame.WindowHeight / 8, containerSize, containerSize), Color.White);
+                if (this.MainGame.ActiveTileManager.m_puzzleComplete)
+                    spriteBatch.Draw(this.MainGame.ActiveTileManager.m_puzzleImage, new Rectangle(this.MainGame.WindowHeight / 8 + Tile.TILE_CONTAINER_PADDING, this.MainGame.WindowHeight / 8 + Tile.TILE_CONTAINER_PADDING, containerSize - Tile.TILE_CONTAINER_PADDING * 2, containerSize - Tile.TILE_CONTAINER_PADDING * 2), Color.White);
 
                 spriteBatch.Draw(this.m_sandyShadow,
                     new Rectangle(this.MainGame.WindowCenter.X + SHADOW_OFFSET + this.MainGame.WindowHeight / 8, this.MainGame.WindowCenter.Y + this.MainGame.WindowHeight / 16 + SHADOW_OFFSET, (int)(this.MainGame.WindowWidth / 2 - (this.MainGame.WindowHeight / 4)), (int)(this.MainGame.WindowHeight * 5 / 16)),
@@ -165,7 +188,10 @@ namespace TileTest
 
                 string text = "Puzzle Select";
                 spriteBatch.DrawString(this.m_bahnschriftFont, text, new Vector2((this.MainGame.WindowWidth / 2 - (int)(this.m_bahnschriftFont.MeasureString(text).X * 0.5)), 150), Color.White);
-                
+
+                spriteBatch.DrawString(this.m_bahnschriftFont, $"Grid: {this.MainGame.CurrentGridSize} x {this.MainGame.CurrentGridSize}", new Vector2(this.MainGame.WindowCenter.X + 20 + this.MainGame.WindowHeight * 6 / 16, this.MainGame.WindowHeight / 8 + 165), Color.White);
+
+
                 foreach (Button puzzleImageButton in this.MainGame.ActiveInputManager.ActiveButtonManager.m_imageSelectButtons)
                 {
                     if (puzzleImageButton.IsHover)
@@ -190,7 +216,6 @@ namespace TileTest
                             timeToDisplay = "Best Time:\n --";
                         }
 
-                        spriteBatch.DrawString(this.m_bahnschriftFont, $"{this.MainGame.CurrentGridSize} x {this.MainGame.CurrentGridSize}", new Vector2(this.MainGame.WindowCenter.X + 20 + this.MainGame.WindowHeight * 6 / 16, this.MainGame.WindowHeight / 8 + 165), Color.White);
 
 
                         spriteBatch.DrawString(this.m_bahnschriftFont, scoreToDisplay, new Vector2(this.MainGame.WindowCenter.X + 20 + this.MainGame.WindowHeight * 6 / 16, this.MainGame.WindowHeight / 8 + 275), Color.White);
@@ -200,6 +225,36 @@ namespace TileTest
 
                     }
                 }
+            }
+
+            if (this.ActiveGameState == GameState.PuzzleComplete)
+            {
+                spriteBatch.Draw(this.m_screenDimmer, new Rectangle(0, 0, this.MainGame.WindowWidth, this.MainGame.WindowHeight), Color.White);
+                
+                spriteBatch.Draw(this.m_sandyBannerShadow, new Rectangle(0, (int)this.m_bannerYPosition + SHADOW_OFFSET, this.MainGame.WindowWidth, 200), Color.White);
+                spriteBatch.Draw(this.m_sandyBanner, new Rectangle(0, (int)this.m_bannerYPosition, this.MainGame.WindowWidth, 200), Color.White);
+
+                if (Math.Abs(this.m_bannerYPosition - this.m_bannerYTarget) < 2)
+                {
+                    int puzzleImageIndex = this.MainGame.PuzzleTextures.IndexOf(this.MainGame.ActiveTileManager.m_puzzleImage);
+                    int currentGridSize = this.MainGame.CurrentGridSize;
+                    spriteBatch.DrawString(this.m_bahnschriftFont, "Puzzle Complete!", new Vector2(this.MainGame.WindowCenter.X - 200, this.MainGame.WindowHeight / 2 - 250), Color.White);
+                    if( this.MainGame.ActiveTileManager.MoveCount == this.MainGame.ActiveHighscoreTracker.GetBestMoves(currentGridSize, puzzleImageIndex))
+                    {
+                        spriteBatch.Draw(this.m_trophy, new Rectangle(335, this.m_bannerYTarget + 250, 100, 120), Color.White);
+                        spriteBatch.DrawString(this.m_bahnschriftFont, "New best move count!", new Vector2(445, this.m_bannerYTarget + 260), Color.White);
+
+                    }
+
+                    if (this.MainGame.ActiveTileManager.TotalSecondsElapsed == this.MainGame.ActiveHighscoreTracker.GetBestTime(currentGridSize, puzzleImageIndex))
+                    { 
+                        spriteBatch.Draw(this.m_trophy, new Rectangle(this.MainGame.WindowWidth / 2 + 135, this.m_bannerYTarget + 250, 100, 120), Color.White);
+                        spriteBatch.DrawString(this.m_bahnschriftFont, "New best time!", new Vector2(this.MainGame.WindowWidth / 2 + 245, this.m_bannerYTarget + 260), Color.White);
+
+                    }
+                }
+
+
             }
         }
 
@@ -225,6 +280,15 @@ namespace TileTest
                 }
             }
 
+            if (this.ActiveGameState == GameState.PuzzleComplete)
+            {
+                var dy = this.m_bannerYTarget - this.m_bannerYPosition;
+                this.m_bannerYPosition += dy * this.m_shiftMultiplier;
+            } 
+            else
+            {
+                this.m_bannerYPosition = -300;
+            }
 
         }
     }

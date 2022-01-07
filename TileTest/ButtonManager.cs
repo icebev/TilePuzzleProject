@@ -74,7 +74,7 @@ namespace TileTest
             var instructionsButton = new Button(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH * 2 / 3 - 225, 650), 300, 70, new GameState[1] { GameState.MainTitleScreen }, "Instructions");
             instructionsButton.OnClick += this.InstructionsButton_OnClick; ;
 
-            var backButton = new Button(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH / 2 - 150, 650), 300, 70, new GameState[3] { GameState.Credits, GameState.Instructions, GameState.OptionsScreen }, "Back");
+            var backButton = new Button(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH / 2 - 150, 650), 300, 70, new GameState[4] { GameState.Credits, GameState.Instructions, GameState.OptionsScreen, GameState.PuzzleComplete }, "Back");
             backButton.OnClick += this.BackButton_OnClick;
 
             var fullScreenButton = new ToggleButton(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH - 600, 15), 250, 55, new GameState[2] { GameState.MainTitleScreen, GameState.PuzzleActive }, "Fullscreen");
@@ -87,7 +87,7 @@ namespace TileTest
             var exitButton = new Button(new Vector2(100, 15), 250, 55, new GameState[3] { GameState.MainTitleScreen, GameState.PuzzleSelect, GameState.PuzzleActive }, "Exit");
             exitButton.OnClick += this.ExitButton_OnClick;
 
-            var randomPuzzleButton = new Button(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH / 2 + 300, 625), 200, 100, new GameState[1] { GameState.PuzzleSelect }, "Random");
+            var randomPuzzleButton = new Button(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH / 2 + 350, 625), 200, 100, new GameState[1] { GameState.PuzzleSelect }, "Random");
             randomPuzzleButton.OnClick += this.RandomPuzzleButton_OnClick;
 
             var shuffleButton = new Button(new Vector2(TileTestGame.WINDOW_STARTING_WIDTH / 2 + 412 - 200, 525), 400, 70, new GameState[1] { GameState.PuzzleActive }, "Restart / Shuffle");
@@ -193,6 +193,8 @@ namespace TileTest
         private void BackButton_OnClick(object sender, EventArgs e)
         {
             if (this.MainGame.ActiveGameState == GameState.OptionsScreen)
+                this.MainGame.ActiveGameState = GameState.PuzzleActive;
+            else if (this.MainGame.ActiveGameState == GameState.PuzzleComplete)
                 this.MainGame.ActiveGameState = GameState.PuzzleActive;
             else
                 this.MainGame.ActiveGameState = GameState.MainTitleScreen;

@@ -67,7 +67,7 @@ namespace TileTest
             Debug.WriteLine("Click detected!");
             this.ActiveButtonManager.CheckIfButtonsClicked(currentMouseState);
 
-            if (this.ActiveGameState == GameState.PuzzleActive)
+            if (this.ActiveGameState == GameState.PuzzleActive && !this.ActiveTileManager.m_puzzleComplete)
             {
                 foreach (IGridMember tile in this.ActiveTileManager.TilesArray)
                 {

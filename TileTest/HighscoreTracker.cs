@@ -47,7 +47,7 @@ namespace TileTest
             {
                 foreach (ScoreEntry scoreEntry in EntriesToCompare)
                 {
-                    if (scoreEntry.BestMoves <= moveCount || scoreEntry.BestTime <= timeElapsed)
+                    if (scoreEntry.BestMoves <= moveCount && scoreEntry.BestTime <= timeElapsed)
                     {
                         additionalEntryRequired = false;
                     }

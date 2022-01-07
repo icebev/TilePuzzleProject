@@ -203,12 +203,13 @@ namespace TileTest
             AudioStore.m_tileSlideSFX = this.Content.Load<SoundEffect>("audio/SFX/slide");
             AudioStore.m_clickOnSFX = this.Content.Load<SoundEffect>("audio/SFX/clickOn");
             AudioStore.m_clickOffSFX = this.Content.Load<SoundEffect>("audio/SFX/clickOff");
+            AudioStore.m_puzzleCompleteSFX = this.Content.Load<SoundEffect>("audio/SFX/puzzleComplete");
 
             AudioStore.m_nileJourneyMusic = this.Content.Load<Song>("audio/music/nileJourneyMusicAmbience");
             MediaPlayer.Volume = 0;
 
 
-            this.m_bahnschriftFont = this.Content.Load<SpriteFont>("fonts/bahnschrift");
+            this.m_bahnschriftFont = this.Content.Load<SpriteFont>("fonts/calligraphic");
             this.m_inputManager = new InputManager(this, this.ActiveTileManager);
             this.m_interfaceRenderer = new InterfaceRenderer(this, this.m_bahnschriftFont);
             this.m_interfaceRenderer.LoadTextures();
@@ -279,8 +280,6 @@ namespace TileTest
                     if (MediaPlayer.State != MediaState.Playing)
                     {
                         MediaPlayer.Play(AudioStore.m_nileJourneyMusic);
-                        MediaPlayer.IsRepeating = true;
-
                     }
 
                     MediaPlayer.Volume = 0.2f;

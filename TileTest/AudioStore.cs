@@ -15,6 +15,7 @@ namespace TileTest
         public static SoundEffect m_tileSlideSFX;
         public static SoundEffect m_clickOnSFX;
         public static SoundEffect m_clickOffSFX;
+        public static SoundEffect m_puzzleCompleteSFX;
 
         public static Song m_nileJourneyMusic;
     }
