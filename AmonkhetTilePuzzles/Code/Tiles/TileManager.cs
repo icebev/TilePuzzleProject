@@ -25,13 +25,14 @@ namespace AmonkhetTilePuzzles
         private Texture2D m_tileShadow;
         private SpriteFont m_font;
 
-       
-
         private bool m_shouldPlaySfx;
+        public bool m_completeDelayFlag;
         public bool m_puzzleComplete;
         
         private int m_moves = 0;
         private float m_secondsElapsed = 0;
+        private const float COMPLETION_FLAG_DELAY_SECONDS = 1.5f;
+        private float m_completeAnimationDelay;
 
         private Random m_random;
         private TileGame m_mainGame;
@@ -145,8 +146,21 @@ namespace AmonkhetTilePuzzles
         }
         public void UpdateTiles(GameTime gameTime)
         {
-            if (!this.m_puzzleComplete)
+            if (!this.m_puzzleComplete && !this.m_completeDelayFlag)
                 this.m_secondsElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (!this.m_completeDelayFlag && this.m_puzzleComplete)
+                this.m_completeAnimationDelay -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+            else
+                this.m_completeAnimationDelay = COMPLETION_FLAG_DELAY_SECONDS;
+
+            if (this.m_completeAnimationDelay <= 0 && !this.m_completeDelayFlag)
+            {
+                this.MainGame.ActiveGameState = GameState.PuzzleComplete;
+                if (!this.MainGame.IsMuted)
+                    AudioStore.m_puzzleCompleteSFX.Play(volume: 0.5f, pitch: 0.0f, pan: 0.0f);
+                this.m_completeDelayFlag = true;
+            }
 
             foreach (IGridMember tile in this.m_tilesArray)
             {
@@ -156,7 +170,7 @@ namespace AmonkhetTilePuzzles
         }
         public void DrawTiles(SpriteBatch spriteBatch)
         {
-            if (!this.m_puzzleComplete)
+            if (!this.m_completeDelayFlag)
             {
                 foreach (IGridMember tile in this.m_tilesArray)
                 {
@@ -249,6 +263,7 @@ namespace AmonkhetTilePuzzles
             this.MoveCount = 0;
             this.m_secondsElapsed = 0;
             this.m_puzzleComplete = false;
+            this.m_completeDelayFlag = false;
         }
 
         public bool CheckPuzzleCompletion()
@@ -261,14 +276,12 @@ namespace AmonkhetTilePuzzles
                     return false;
                 }
             }
+
+            
             this.m_puzzleComplete = true;
             Debug.WriteLine("Puzzle Complete!");
-            
             this.MainGame.ActiveHighscoreTracker.UpdateScoreEntry(this.GridSize, this.PuzzleImageIndex, this.MoveCount, this.TotalSecondsElapsed);
             HighscoreTracker.Save(this.MainGame.ActiveHighscoreTracker);
-            this.MainGame.ActiveGameState = GameState.PuzzleComplete;
-            if (!this.MainGame.IsMuted)
-                AudioStore.m_puzzleCompleteSFX.Play(volume: 0.5f, pitch: 0.0f, pan: 0.0f);
             return true;
 
         }

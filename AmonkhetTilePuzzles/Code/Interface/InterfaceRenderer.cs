@@ -43,6 +43,8 @@ namespace AmonkhetTilePuzzles
 
         private Texture2D m_screenDimmer;
         private Texture2D m_trophy;
+        private Texture2D m_credits;
+        private Texture2D m_instructions;
 
         private TileGame MainGame
         {
@@ -77,6 +79,9 @@ namespace AmonkhetTilePuzzles
             this.m_screenDimmer = this.MainGame.Content.Load<Texture2D>("textures/interface/screenDimmer");
 
             this.m_trophy = this.MainGame.Content.Load<Texture2D>("textures/interface/trophy");
+
+            this.m_credits = this.MainGame.Content.Load<Texture2D>("textures/interface/credits");
+            this.m_instructions = this.MainGame.Content.Load<Texture2D>("textures/interface/puzzleInstructions");
         }
 
         public void DrawInterface(SpriteBatch spriteBatch)
@@ -115,7 +120,7 @@ namespace AmonkhetTilePuzzles
                 int containerSize = 3 * shorterSide / 4;
                 spriteBatch.Draw(this.m_squareContainerShadow, new Rectangle(this.MainGame.WindowHeight / 8 + SHADOW_OFFSET, this.MainGame.WindowHeight / 8 + SHADOW_OFFSET, containerSize, containerSize), Color.White);
                 spriteBatch.Draw(this.m_squareContainer, new Rectangle(this.MainGame.WindowHeight / 8, this.MainGame.WindowHeight / 8, containerSize, containerSize), Color.White);
-                if (this.MainGame.ActiveTileManager.m_puzzleComplete)
+                if (this.MainGame.ActiveTileManager.m_completeDelayFlag)
                     spriteBatch.Draw(this.MainGame.ActiveTileManager.m_puzzleImage, new Rectangle(this.MainGame.WindowHeight / 8 + Tile.TILE_CONTAINER_PADDING, this.MainGame.WindowHeight / 8 + Tile.TILE_CONTAINER_PADDING, containerSize - Tile.TILE_CONTAINER_PADDING * 2, containerSize - Tile.TILE_CONTAINER_PADDING * 2), Color.White);
 
                 spriteBatch.Draw(this.m_sandyShadow,
@@ -161,11 +166,16 @@ namespace AmonkhetTilePuzzles
                 string text = "Options";
                 spriteBatch.DrawString(this.m_bahnschriftFont, text, new Vector2((this.MainGame.WindowWidth / 2 - (int)(this.m_bahnschriftFont.MeasureString(text).X * 0.5)), 125), Color.White);
                 text = "Grid Size:";
-                spriteBatch.DrawString(this.m_bahnschriftFont, text, new Vector2((this.MainGame.WindowWidth / 2 - (int)(this.m_bahnschriftFont.MeasureString(text).X) - 50), 225), Color.White);
+                int yPos = (int)(ButtonManager.OPTION_BUTTON_START_Y * this.MainGame.GetWindowScaleFactor().Y);
+
+                spriteBatch.DrawString(this.m_bahnschriftFont, text, new Vector2((this.MainGame.WindowWidth / 2 - (int)(this.m_bahnschriftFont.MeasureString(text).X) - 50), yPos), Color.White);
                 text = "Show tile numbers:";
-                spriteBatch.DrawString(this.m_bahnschriftFont, text, new Vector2((this.MainGame.WindowWidth / 2 - (int)(this.m_bahnschriftFont.MeasureString(text).X) - 50), 375), Color.White);
+                yPos += (int)(ButtonManager.OPTION_BUTTON_SEPARATION_Y * this.MainGame.GetWindowScaleFactor().Y);
+                spriteBatch.DrawString(this.m_bahnschriftFont, text, new Vector2((this.MainGame.WindowWidth / 2 - (int)(this.m_bahnschriftFont.MeasureString(text).X) - 50), yPos), Color.White);
                 text = "Show timer:";
-                spriteBatch.DrawString(this.m_bahnschriftFont, text, new Vector2((this.MainGame.WindowWidth / 2 - (int)(this.m_bahnschriftFont.MeasureString(text).X) - 50), 525), Color.White);
+                yPos += (int)(ButtonManager.OPTION_BUTTON_SEPARATION_Y * this.MainGame.GetWindowScaleFactor().Y);
+
+                spriteBatch.DrawString(this.m_bahnschriftFont, text, new Vector2((this.MainGame.WindowWidth / 2 - (int)(this.m_bahnschriftFont.MeasureString(text).X) - 50), yPos), Color.White);
 
             }
             // new Rectangle(this.m_mainGame.WindowCenter.X + this.m_mainGame.WindowHeight / 8, this.m_mainGame.WindowHeight / 8 + 15, this.m_mainGame.WindowHeight * 5 / 16, this.m_mainGame.WindowHeight * 5 / 16)
@@ -186,14 +196,14 @@ namespace AmonkhetTilePuzzles
                 string text = "Puzzle Select";
                 spriteBatch.DrawString(this.m_bahnschriftFont, text, new Vector2((this.MainGame.WindowWidth / 2 - (int)(this.m_bahnschriftFont.MeasureString(text).X * 0.5)), 150), Color.White);
 
-                spriteBatch.DrawString(this.m_bahnschriftFont, $"Grid: {this.MainGame.CurrentGridSize} x {this.MainGame.CurrentGridSize}", new Vector2(this.MainGame.WindowCenter.X + 20 + this.MainGame.WindowHeight * 6 / 16, this.MainGame.WindowHeight / 8 + 165), Color.White);
+                //spriteBatch.DrawString(this.m_bahnschriftFont, $"Grid: {this.MainGame.CurrentGridSize} x {this.MainGame.CurrentGridSize}", new Vector2(this.MainGame.WindowCenter.X + 20 + this.MainGame.WindowHeight * 6 / 16, this.MainGame.WindowHeight / 8 + 165), Color.White);
 
 
-                foreach (Button puzzleImageButton in this.MainGame.ActiveInputManager.ActiveButtonManager.m_imageSelectButtons)
+                foreach (Button puzzleImageButton in this.MainGame.ActiveInputManager.ActiveButtonManager.ImageSelectButtons)
                 {
                     if (puzzleImageButton.IsHover)
                     {
-                        int puzzleImageIndex = this.MainGame.ActiveInputManager.ActiveButtonManager.m_imageSelectButtons.IndexOf(puzzleImageButton);
+                        int puzzleImageIndex = this.MainGame.ActiveInputManager.ActiveButtonManager.ImageSelectButtons.IndexOf(puzzleImageButton);
                         int currentGridSize = this.MainGame.CurrentGridSize;
 
                         bool hasScoreSet = (this.MainGame.ActiveHighscoreTracker.GetRelevantEntries(currentGridSize, puzzleImageIndex).Count > 0);
@@ -213,11 +223,8 @@ namespace AmonkhetTilePuzzles
                             timeToDisplay = "Best Time:\n --";
                         }
 
-
-
                         spriteBatch.DrawString(this.m_bahnschriftFont, scoreToDisplay, new Vector2(this.MainGame.WindowCenter.X + 20 + this.MainGame.WindowHeight * 6 / 16, this.MainGame.WindowHeight / 8 + 275), Color.White);
 
-                        
                         spriteBatch.DrawString(this.m_bahnschriftFont, timeToDisplay , new Vector2(this.MainGame.WindowCenter.X + 20 + this.MainGame.WindowHeight * 6 / 16, this.MainGame.WindowHeight / 8 + 375), Color.White);
 
                     }
@@ -251,7 +258,25 @@ namespace AmonkhetTilePuzzles
                     }
                 }
 
+            }
+            if (this.ActiveGameState == GameState.Credits || this.ActiveGameState == GameState.Instructions)
+            {
+                //SpriteBatch.Draw(Texture2D, Vector2, Nullable<Rectangle>, Color, Single, Vector2, Single, SpriteEffects, Single)
+                //SpriteBatch.Draw (Texture2D, Rectangle, Nullable<Rectangle>, Color, Single, Vector2, SpriteEffects, Single)
+                Vector2 origin = new Vector2(this.m_credits.Width / 2, this.m_credits.Height / 2);
+                Vector2 position = new Vector2(this.MainGame.WindowWidth / 2, this.MainGame.WindowHeight / 2 - 50);
+                Vector2 scaleMultiplier = this.MainGame.GetWindowScaleFactor();
+                if (this.ActiveGameState == GameState.Credits)
+                {
+                    Vector2 scale = new Vector2(0.6f, 0.6f) * scaleMultiplier;
+                    spriteBatch.Draw(this.m_credits, position, null, Color.White, 0, origin, scale, SpriteEffects.None, 1.0f);
+                }
+                else
+                {
+                    Vector2 scale = new Vector2(0.5f, 0.5f) * scaleMultiplier;
 
+                    spriteBatch.Draw(this.m_instructions, position, null, Color.White, 0, origin, scale, SpriteEffects.None, 1.0f);
+                }
             }
         }
 

@@ -72,7 +72,14 @@ namespace AmonkhetTilePuzzles
                                     where s.GridSize == gridSize && s.PuzzleImageIndex == puzzleNumber
                                     select s;
 
-            return ScoreEntryTargets.ToList();
+            if (ScoreEntryTargets.Any())
+                return ScoreEntryTargets.ToList();
+            else
+            {
+                List<ScoreEntry> blankList = new List<ScoreEntry>();
+                return blankList;
+            }
+
         }
         public int GetBestMoves(int gridSize, int puzzleNumber)
         {
@@ -130,6 +137,12 @@ namespace AmonkhetTilePuzzles
                 serializer.Serialize(writer, highscoreTracker.m_bestScores);
             }
 
+        }
+
+        public void ResetScores()
+        {
+            this.m_bestScores = new List<ScoreEntry>();
+            Save(this);
         }
     }
 }

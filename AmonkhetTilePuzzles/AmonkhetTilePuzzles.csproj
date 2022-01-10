@@ -47,22 +47,22 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AudioSystem\AudioStore.cs" />
-    <Compile Include="TileSystem\BlankTile.cs" />
-    <Compile Include="InputMechanisms\Button.cs" />
-    <Compile Include="InputMechanisms\ButtonManager.cs" />
-    <Compile Include="HighscoreSaving\HighscoreTracker.cs" />
-    <Compile Include="Enums\GameState.cs" />
-    <Compile Include="TileSystem\IGridMember.cs" />
-    <Compile Include="InputMechanisms\InputManager.cs" />
-    <Compile Include="InterfaceDisplay\InterfaceRenderer.cs" />
-    <Compile Include="Main\Program.cs" />
+    <Compile Include="Code\Audio\AudioStore.cs" />
+    <Compile Include="Code\Tiles\BlankTile.cs" />
+    <Compile Include="Code\Input\Button.cs" />
+    <Compile Include="Code\Input\ButtonManager.cs" />
+    <Compile Include="Code\Highscores\HighscoreTracker.cs" />
+    <Compile Include="Code\Enums\GameState.cs" />
+    <Compile Include="Code\Tiles\IGridMember.cs" />
+    <Compile Include="Code\Input\InputManager.cs" />
+    <Compile Include="Code\Interface\InterfaceRenderer.cs" />
+    <Compile Include="Code\Main\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="HighscoreSaving\ScoreEntry.cs" />
-    <Compile Include="TileSystem\Tile.cs" />
-    <Compile Include="TileSystem\TileManager.cs" />
-    <Compile Include="Main\TileGame.cs" />
-    <Compile Include="InputMechanisms\ToggleButton.cs" />
+    <Compile Include="Code\Highscores\ScoreEntry.cs" />
+    <Compile Include="Code\Tiles\Tile.cs" />
+    <Compile Include="Code\Tiles\TileManager.cs" />
+    <Compile Include="Code\Main\TileGame.cs" />
+    <Compile Include="Code\Input\ToggleButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

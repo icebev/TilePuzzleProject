@@ -99,3 +99,6 @@ C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzle
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\AmonkhetTilePuzzles\obj\Debug\AmonkhetTilePuzzles.pdb
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\AmonkhetTilePuzzles\bin\DesktopGL\AnyCPU\Debug\AmonkhetTilePuzzles.exe
 C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\AmonkhetTilePuzzles\obj\Debug\AmonkhetTilePuzzles.exe
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\AmonkhetTilePuzzles\obj\Debug\AmonkhetTilePuzzles.csproj.AssemblyReference.cache
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\AmonkhetTilePuzzles\bin\DesktopGL\AnyCPU\Debug\Content\textures\interface\credits.xnb
+C:\Users\joebe\OneDrive\Documents\BirminghamCityUni\Module2Assessment\TilePuzzleProject\TilePuzzleProject\AmonkhetTilePuzzles\bin\DesktopGL\AnyCPU\Debug\Content\textures\interface\puzzleInstructions.xnb

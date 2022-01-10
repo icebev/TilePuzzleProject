@@ -14,7 +14,7 @@ namespace AmonkhetTilePuzzles
     /// </summary>
     public class TileGame : Game
     {
-        #region Member Variables
+        #region Variables
         public const int WINDOW_STARTING_WIDTH = 1600;
         public const int WINDOW_STARTING_HEIGHT = 900;
 
@@ -29,8 +29,7 @@ namespace AmonkhetTilePuzzles
         private Texture2D m_puzzleBackgroundTexture;
         private Texture2D m_tileShadowTexture;
        
-
-        public SpriteFont m_bahnschriftFont;
+        public SpriteFont m_calligraphicFont;
 
         private GameState m_gameState;
         private TileManager m_tileManager;
@@ -209,9 +208,9 @@ namespace AmonkhetTilePuzzles
             MediaPlayer.Volume = 0;
 
 
-            this.m_bahnschriftFont = this.Content.Load<SpriteFont>("fonts/calligraphic");
+            this.m_calligraphicFont = this.Content.Load<SpriteFont>("fonts/calligraphic");
             this.m_inputManager = new InputManager(this);
-            this.m_interfaceRenderer = new InterfaceRenderer(this, this.m_bahnschriftFont);
+            this.m_interfaceRenderer = new InterfaceRenderer(this, this.m_calligraphicFont);
             this.m_interfaceRenderer.LoadTextures();
             //this.m_buttonManager = new ButtonManager(this);
 
@@ -239,7 +238,7 @@ namespace AmonkhetTilePuzzles
             {
                 this.CurrentGridSize = gridSizeOverride;
             }
-            this.ActiveTileManager = new TileManager(this, this.CurrentGridSize, puzzleImage, this.m_bahnschriftFont, this.m_tileShadowTexture);
+            this.ActiveTileManager = new TileManager(this, this.CurrentGridSize, puzzleImage, this.m_calligraphicFont, this.m_tileShadowTexture);
             this.ActiveTileManager.GenerateTiles();
             this.ActiveTileManager.JumbleTiles();
             //this.ActiveGameState = GameState.PuzzleActive;

@@ -12,47 +12,71 @@ namespace AmonkhetTilePuzzles
 {
     public class ButtonManager
     {
+        #region Variables
+        public const int OPTION_BUTTON_START_Y = 200;
+        public const int OPTION_BUTTON_SEPARATION_Y = 150;
         private const int IMAGE_GRID_COLUMNS = 3;
+        private const int PUZZLE_SELECT_BUTTONS_START_X = 400;
+        private const int PUZZLE_SELECT_BUTTONS_SEPARATION_X = 250;
+        private const int PUZZLE_SELECT_BUTTONS_START_Y = 250;
+        private const int PUZZLE_SELECT_BUTTONS_SEPARATION_Y = 175;
+        private const int PUZZLE_SELECT_BUTTONS_SIZE = 150;
+        private const int STANDARD_BUTTON_HEIGHT = 100;
+
         private TileGame m_mainGame;
-        public List<Button> m_buttonRoster;
-        public List<Button> m_imageSelectButtons;
+        
+        private List<Button> m_buttonRoster;
+        private List<Button> m_imageSelectButtons;
         private List<ToggleButton> m_difficultyToggleButtons;
+        
         private Texture2D m_normalTexture;
         private Texture2D m_hoverTexture;
         private Texture2D m_clickTexture;
+        private SpriteFont m_calligraphicFont;
+        private Button m_gridSizeButton;
 
-        private SpriteFont m_bahnschriftFont;
-        //private Button testImageButton;
+        #endregion
 
+        #region Properties
         private TileGame MainGame
         {
             get { return this.m_mainGame; }
         }
+        public List<Button> ButtonRoster { get => this.m_buttonRoster; }
+        public List<Button> ImageSelectButtons { get => this.m_imageSelectButtons;}
+        #endregion
 
+        #region Constructor
         public ButtonManager(TileGame mainGame)
         {
             this.m_mainGame = mainGame;
-            this.m_bahnschriftFont = this.MainGame.m_bahnschriftFont;
+            this.m_calligraphicFont = this.MainGame.m_calligraphicFont;
             this.m_normalTexture = this.MainGame.Content.Load<Texture2D>("textures/button/normal");
             this.m_hoverTexture = this.MainGame.Content.Load<Texture2D>("textures/button/hover");
             this.m_clickTexture = this.MainGame.Content.Load<Texture2D>("textures/button/click");
+            
             this.m_imageSelectButtons = new List<Button>();
             this.m_difficultyToggleButtons = new List<ToggleButton>();
 
+            #region Button Instantiation
 
+            // For loop used to create a grid of puzzle image buttons for the puzzle select screen.
+            // It can work with any number of puzzles in the PuzzleTextures list.
             for (int i = 0; i < this.MainGame.PuzzleTextures.Count(); i++)
             {
                 int gridX = i % IMAGE_GRID_COLUMNS;
                 int gridY = (int)Math.Floor((float)(i / IMAGE_GRID_COLUMNS));
-                var newImageButton = new Button(new Vector2(400 + 250 * gridX, 250 + 175 * gridY), 150, 150, new GameState[] { GameState.PuzzleSelect });
+                var newImageButton = new Button(new Vector2(PUZZLE_SELECT_BUTTONS_START_X + PUZZLE_SELECT_BUTTONS_SEPARATION_X * gridX, PUZZLE_SELECT_BUTTONS_START_Y + PUZZLE_SELECT_BUTTONS_SEPARATION_Y * gridY), 
+                    PUZZLE_SELECT_BUTTONS_SIZE, PUZZLE_SELECT_BUTTONS_SIZE, new GameState[] { GameState.PuzzleSelect });
                 newImageButton.OnClick += this.ImageButton_OnClick;
                 this.m_imageSelectButtons.Add(newImageButton);
             }
 
+            // For loop used to create the grid size toggle buttons to avoid repeated code
             for (int i = 3; i < 6; i++)
             {
                 string text = $"{i} x {i}";
-                var newDifficiltyButton = new ToggleButton(new Vector2(TileGame.WINDOW_STARTING_WIDTH / 2 + (175 * (i - 3)), 200), 175, 100, new GameState[] { GameState.OptionsScreen }, text);
+                var newDifficiltyButton = new ToggleButton(new Vector2(TileGame.WINDOW_STARTING_WIDTH / 2 + (175 * (i - 3)), OPTION_BUTTON_START_Y), 175, STANDARD_BUTTON_HEIGHT, new GameState[] { GameState.OptionsScreen }, text);
                 newDifficiltyButton.OnToggle += this.DifficultyButton_OnToggle;
                 if ((i) == this.MainGame.CurrentGridSize)
                     newDifficiltyButton.ToggledState = true;
@@ -60,12 +84,14 @@ namespace AmonkhetTilePuzzles
                 
             }
 
-            var toggleHintsButton = new ToggleButton(new Vector2(TileGame.WINDOW_STARTING_WIDTH / 2 + 163, 350), 200, 100, new GameState[] { GameState.OptionsScreen }, "Off");
+            // All other buttons will be placed in a button roster list for easy management as they are similar is many ways
+            var toggleHintsButton = new ToggleButton(new Vector2(TileGame.WINDOW_STARTING_WIDTH / 2 + 163, OPTION_BUTTON_START_Y + OPTION_BUTTON_SEPARATION_Y), 200, STANDARD_BUTTON_HEIGHT, new GameState[] { GameState.OptionsScreen }, "Off");
             toggleHintsButton.OnToggle += this.ToggleHintsButton_OnToggle;
-            var toggleTimerButton = new ToggleButton(new Vector2(TileGame.WINDOW_STARTING_WIDTH / 2 + 163, 500), 200, 100, new GameState[] { GameState.OptionsScreen }, "Off");
+            
+            var toggleTimerButton = new ToggleButton(new Vector2(TileGame.WINDOW_STARTING_WIDTH / 2 + 163, OPTION_BUTTON_START_Y + OPTION_BUTTON_SEPARATION_Y * 2), 200, STANDARD_BUTTON_HEIGHT, new GameState[] { GameState.OptionsScreen }, "Off");
             toggleTimerButton.OnToggle += this.ToggleTimerButton_OnToggle;
 
-            var titleScreenButton = new Button(new Vector2(TileGame.WINDOW_STARTING_WIDTH / 2 - 200, 400), 400, 100, new GameState[1] { GameState.MainTitleScreen }, "Start Game");
+            var titleScreenButton = new Button(new Vector2(TileGame.WINDOW_STARTING_WIDTH / 2 - 200, 400), 400, STANDARD_BUTTON_HEIGHT, new GameState[1] { GameState.MainTitleScreen }, "Start Game");
             titleScreenButton.OnClick += this.GoToPuzzleSelect_OnClick;
             
             var creditsButton = new Button(new Vector2(TileGame.WINDOW_STARTING_WIDTH / 3 - 75, 650), 300, 70, new GameState[1] { GameState.MainTitleScreen }, "Credits");
@@ -84,11 +110,18 @@ namespace AmonkhetTilePuzzles
             var muteButton = new ToggleButton(new Vector2(TileGame.WINDOW_STARTING_WIDTH - 300, 15), 250, 55, new GameState[2] { GameState.MainTitleScreen, GameState.PuzzleActive }, "Mute");
             muteButton.OnToggle += this.MuteButton_OnToggle;
             
+            var resetScoresButton = new Button(new Vector2(TileGame.WINDOW_STARTING_WIDTH - 300, TileGame.WINDOW_STARTING_HEIGHT - 70), 250, 55, new GameState[1] { GameState.OptionsScreen }, "Reset Scores");
+            resetScoresButton.OnClick += this.ResetScoresButton_OnClick;
+            
             var exitButton = new Button(new Vector2(100, 15), 250, 55, new GameState[3] { GameState.MainTitleScreen, GameState.PuzzleSelect, GameState.PuzzleActive }, "Exit");
             exitButton.OnClick += this.ExitButton_OnClick;
 
-            var randomPuzzleButton = new Button(new Vector2(TileGame.WINDOW_STARTING_WIDTH / 2 + 350, 625), 200, 100, new GameState[1] { GameState.PuzzleSelect }, "Random");
+            var randomPuzzleButton = new Button(new Vector2(TileGame.WINDOW_STARTING_WIDTH / 2 + 350, 625), 200, STANDARD_BUTTON_HEIGHT, new GameState[1] { GameState.PuzzleSelect }, "Random");
             randomPuzzleButton.OnClick += this.RandomPuzzleButton_OnClick;
+
+            var gridSizeButton = new Button(new Vector2(TileGame.WINDOW_STARTING_WIDTH / 2 + 350, 200), 200, STANDARD_BUTTON_HEIGHT, new GameState[1] { GameState.PuzzleSelect }, "Grid: 3 x 3");
+            gridSizeButton.OnClick += this.GridSizeButton_OnClick;
+            this.m_gridSizeButton = gridSizeButton;
 
             var shuffleButton = new Button(new Vector2(TileGame.WINDOW_STARTING_WIDTH / 2 + 412 - 200, 525), 400, 70, new GameState[1] { GameState.PuzzleActive }, "Restart / Shuffle");
             shuffleButton.OnClick += this.ShuffleButton_OnClick;
@@ -105,7 +138,9 @@ namespace AmonkhetTilePuzzles
                 fullScreenButton,
                 muteButton,
                 exitButton,
+                resetScoresButton,
                 randomPuzzleButton,
+                gridSizeButton,
                 creditsButton,
                 instructionsButton,
                 backButton,
@@ -115,12 +150,30 @@ namespace AmonkhetTilePuzzles
                 toggleHintsButton,
                 toggleTimerButton
             };
-
-            //this.testImageButton = new Button(new Vector2(300, 500), 100, 100, "testimage");
-            //this.testImageButton.OnClick += this.TitleScreenButton_OnClick;
-
+            #endregion
         }
 
+        private void ResetScoresButton_OnClick(object sender, EventArgs e)
+        {
+            this.MainGame.ActiveHighscoreTracker.ResetScores();
+        }
+
+        private void GridSizeButton_OnClick(object sender, EventArgs e)
+        {
+            Button senderButton = (Button)sender;
+            switch (this.MainGame.CurrentGridSize) {
+                case 5:
+                    this.MainGame.CurrentGridSize = 3;
+                    break;
+                default:
+                    this.MainGame.CurrentGridSize++;
+                    break;
+            };
+            senderButton.ButtonText = $"Grid: {this.MainGame.CurrentGridSize} x {this.MainGame.CurrentGridSize}";
+        }
+        #endregion
+
+        #region Button Funtions
         private void ToggleTimerButton_OnToggle(object sender, EventArgs e)
         {
             ToggleButton senderButton = (ToggleButton)sender;
@@ -155,11 +208,7 @@ namespace AmonkhetTilePuzzles
                     this.MainGame.SetupTileGrid(this.MainGame.ActiveTileManager.m_puzzleImage);
                     break;     
             }
-            for (int b = 0; b < this.m_difficultyToggleButtons.Count; b++)
-            {
-
-                this.m_difficultyToggleButtons[b].ToggledState = (b == i);
-            }
+            
         }
 
         private void OptionsButton_OnClick(object sender, EventArgs e)
@@ -257,68 +306,75 @@ namespace AmonkhetTilePuzzles
             this.MainGame.ActiveGameState = GameState.PuzzleSelect;
             
         }
+        #endregion
+
+        #region Class Methods
 
         public void UpdateButtons(GameTime gameTime, MouseState currentMouseState)
         {
-            //this.m_buttonRoster[0].IsVisible = false;
-            //if (this.MainGame.m_interfaceRenderer.TitleState == TitleScreenState.Main)
-            //    this.m_buttonRoster[0].IsVisible = true;
-
-            foreach (Button button in this.m_buttonRoster)
-            {
-                if (button.IsVisible)
-                    button.UpdateIt(gameTime, currentMouseState, this.MainGame.GetWindowScaleFactor());
-            }
-            
-        
-            foreach (Button button in this.m_imageSelectButtons)
-            {
-                button.UpdateIt(gameTime, currentMouseState, this.MainGame.GetWindowScaleFactor());
-            }
-                //this.testImageButton.UpdateIt(gameTime, currentMouseState, this.MainGame.GetWindowScaleFactor());
-           
-            foreach (Button button in this.m_difficultyToggleButtons)
-            {
-                button.UpdateIt(gameTime, currentMouseState, this.MainGame.GetWindowScaleFactor());
-            }
-        }
-        public void DrawButtons(SpriteBatch spriteBatch)
-        {
-            foreach (Button button in this.m_buttonRoster)
+            foreach (Button button in this.ButtonRoster)
             {
                 if (button.m_visibleStates.Contains(this.MainGame.ActiveGameState))
                 {
                     button.IsVisible = true;
-                    button.DrawIt(spriteBatch, this.m_normalTexture, this.m_hoverTexture, this.m_clickTexture, this.m_bahnschriftFont);
+                    button.UpdateIt(gameTime, currentMouseState, this.MainGame.GetWindowScaleFactor());
                 }
                 else
                 {
                     button.IsVisible = false;
                 }
             }
+                    
+            foreach (Button button in this.ImageSelectButtons)
+            {
+                button.UpdateIt(gameTime, currentMouseState, this.MainGame.GetWindowScaleFactor());
+                if (this.MainGame.ActiveGameState == GameState.PuzzleSelect)
+                    button.IsVisible = true;
+            }
+            
+            foreach (Button button in this.m_difficultyToggleButtons)
+            {
+                button.UpdateIt(gameTime, currentMouseState, this.MainGame.GetWindowScaleFactor());
+                if (this.MainGame.ActiveGameState == GameState.OptionsScreen)
+                    button.IsVisible = true;
+            }
+
+            this.m_gridSizeButton.ButtonText = $"Grid: {this.MainGame.CurrentGridSize} x {this.MainGame.CurrentGridSize}";
+
+        }
+        public void DrawButtons(SpriteBatch spriteBatch)
+        {
+            foreach (Button button in this.ButtonRoster)
+            {
+                if (button.IsVisible)
+                {
+                    button.DrawIt(spriteBatch, this.m_normalTexture, this.m_hoverTexture, this.m_clickTexture, this.m_calligraphicFont);
+                }
+            }
 
             if (this.MainGame.ActiveGameState == GameState.PuzzleSelect)
             {
-                for (int i = 0; i < this.m_imageSelectButtons.Count(); i++)
+                for (int i = 0; i < this.ImageSelectButtons.Count(); i++)
                 {
-                    
-                    this.m_imageSelectButtons[i].DrawIt(spriteBatch, this.MainGame.PuzzleTextures[i]);
+                    this.ImageSelectButtons[i].DrawIt(spriteBatch, this.MainGame.PuzzleTextures[i]);
                 }
             }
 
             if (this.MainGame.ActiveGameState == GameState.OptionsScreen)
             {
+                for (int b = 0; b < this.m_difficultyToggleButtons.Count; b++)
+                {
+                    this.m_difficultyToggleButtons[b].ToggledState = (b == this.MainGame.CurrentGridSize - 3);
+                }
                 foreach (ToggleButton button in this.m_difficultyToggleButtons)
-                    button.DrawIt(spriteBatch, this.m_normalTexture, this.m_hoverTexture, this.m_clickTexture, this.m_bahnschriftFont);
-
+                {
+                    button.DrawIt(spriteBatch, this.m_normalTexture, this.m_hoverTexture, this.m_clickTexture, this.m_calligraphicFont);
+                }
             }
-
-            //this.testImageButton.DrawIt(spriteBatch, this.MainGame.PuzzleTextures[0]);
         }
-
         public void CheckIfButtonsClicked(MouseState currentMouseState)
         {
-            foreach (Button button in this.m_buttonRoster)
+            foreach (Button button in this.ButtonRoster)
             {
                 if (button.IsVisible)
                 {
@@ -328,7 +384,7 @@ namespace AmonkhetTilePuzzles
 
             if (this.MainGame.ActiveGameState == GameState.PuzzleSelect)
             {
-                foreach (Button button in this.m_imageSelectButtons)
+                foreach (Button button in this.ImageSelectButtons)
                 {
                     button.CheckIfClicked(currentMouseState);
                 }
@@ -337,11 +393,12 @@ namespace AmonkhetTilePuzzles
             if (this.MainGame.ActiveGameState == GameState.OptionsScreen)
             {
                 foreach (ToggleButton button in this.m_difficultyToggleButtons)
+                {
                     button.CheckIfClicked(currentMouseState);
-
+                }
             }
-            //this.testImageButton.CheckIfClicked(currentMouseState);
         }
+        #endregion
     }
 
 }
