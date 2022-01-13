@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace AmonkhetTilePuzzles
 {
+    /* GAMESTATE ENUMERATION
+     * Last modified by Joe Bevis 11/01/2022
+     ****************************************/
+
+    /// <summary>
+    /// Allows switching between different screens by referring to the current state
+    /// </summary>
     public enum GameState
     {
         AnimatedTitleScreen,

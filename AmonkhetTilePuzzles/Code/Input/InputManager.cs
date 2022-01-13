@@ -10,11 +10,23 @@ using System.Threading.Tasks;
 
 namespace AmonkhetTilePuzzles
 {
+    /* INPUT MANAGER CLASS
+     * Last modified by Joe Bevis 11/01/2022
+     ****************************************/
+
+    /// <summary>
+    /// The input manager is instantiated by the game and is used to process player inputs
+    /// Mouse clicks and key presses are detected using state comparisons and then handled according to the manager
+    /// </summary>
     public class InputManager
     {
+        #region Variables
+
         private TileGame m_mainGame;
         private ButtonManager m_buttonManager;
+        #endregion
 
+        #region Properties
         private TileGame MainGame
         {
             get { return this.m_mainGame; }
@@ -27,46 +39,64 @@ namespace AmonkhetTilePuzzles
         {
             get { return this.m_buttonManager;  }
         }
-        
         private GameState ActiveGameState
         {
             get { return this.m_mainGame.ActiveGameState; }
             set { this.m_mainGame.ActiveGameState = value; }
         }
 
+        #endregion
+
+        #region Constructor
+        /// <summary>
+        /// The input manager needs a reference to the main game so that it can communicate
+        /// A button manager instance is created inside the manager because buttons are related directly to input
+        /// </summary>
         public InputManager(TileGame mainGame)
         {
             this.m_mainGame = mainGame;
             this.m_buttonManager = new ButtonManager(mainGame);
         }
+        #endregion
 
-     
+        #region Class Methods
+        /// <summary>
+        /// Currently the only visible part of the input manager system is the buttons
+        /// </summary>
         public void DrawIt(SpriteBatch spriteBatch)
         {
             this.m_buttonManager.DrawButtons(spriteBatch);
         }
 
+        /// <summary>
+        /// The process controls is called once per game update cycle 
+        /// it will check wether the mouse has been clicked or a keyboard button has been pressed
+        /// </summary>
         public void ProcessControls(MouseState previousMouseState, MouseState currentMouseState, 
             KeyboardState previousKeyboardState, KeyboardState currentKeyboardState, GameTime gameTime)
         {
+            // Buttons need to be updated as part of the game update cycle
             this.ActiveButtonManager.UpdateButtons(gameTime, currentMouseState);
 
             if (currentMouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released)
             {
-                this.MouseClickResponse(currentMouseState, gameTime);
+                this.MouseClickResponse(currentMouseState);
             }
 
             if (currentKeyboardState != previousKeyboardState)
             {
-                this.KeyPressResonse(previousKeyboardState, currentKeyboardState, gameTime);
+                this.KeyPressResonse(previousKeyboardState, currentKeyboardState);
             }
         }
 
-        private void MouseClickResponse(MouseState currentMouseState, GameTime gameTime)
+        /// <summary>
+        /// Called when the left mouse button is pressed
+        /// </summary>
+        private void MouseClickResponse(MouseState currentMouseState)
         {
-            Debug.WriteLine("Click detected!");
             this.ActiveButtonManager.CheckIfButtonsClicked(currentMouseState);
 
+            // Only check if a tile has been clicked if the puzzle is not complete
             if (this.ActiveGameState == GameState.PuzzleActive && !this.ActiveTileManager.m_puzzleComplete)
             {
                 foreach (IGridMember tile in this.ActiveTileManager.TilesArray)
@@ -82,26 +112,22 @@ namespace AmonkhetTilePuzzles
             }
         }
 
-        private void KeyPressResonse(KeyboardState previousKeyboardState, KeyboardState currentKeyboardState, GameTime gameTime)
+        /// <summary>
+        /// Called when any keyboard key is pressed (causing a change in Keyboard state)
+        /// </summary>
+        private void KeyPressResonse(KeyboardState previousKeyboardState, KeyboardState currentKeyboardState)
         {
+            // To be used for debug (create a 2x2 which is very quick to solve)
             if (this.ActiveGameState == GameState.MainTitleScreen || this.ActiveGameState == GameState.PuzzleActive)
             {
                 if (currentKeyboardState.IsKeyDown(Keys.NumPad2) && !previousKeyboardState.IsKeyDown(Keys.NumPad2))
                 {
                     this.MainGame.SetupTileGrid(this.MainGame.RandomPuzzleTexture, 2);
                 }
-
-                if (currentKeyboardState.IsKeyDown(Keys.NumPad3) && !previousKeyboardState.IsKeyDown(Keys.NumPad3))
-                {
-                    this.MainGame.SetupTileGrid(this.MainGame.RandomPuzzleTexture, 3);
-                }
-
-                if (currentKeyboardState.IsKeyDown(Keys.NumPad4) && !previousKeyboardState.IsKeyDown(Keys.NumPad4))
-                {
-                    this.MainGame.SetupTileGrid(this.MainGame.RandomPuzzleTexture, 4);
-                }
             }
 
+
+            // Arrow key press checks
             if (this.ActiveGameState == GameState.PuzzleActive)
             {
                 if (currentKeyboardState.IsKeyDown(Keys.Down) && !previousKeyboardState.IsKeyDown(Keys.Down))
@@ -145,9 +171,10 @@ namespace AmonkhetTilePuzzles
                 {
                     this.ActiveGameState = GameState.AnimatedTitleScreen;
                 }
-                    
             }
         }
+
+        #endregion
 
     }
 }

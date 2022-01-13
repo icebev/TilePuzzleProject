@@ -8,6 +8,14 @@ using System.Threading.Tasks;
 
 namespace AmonkhetTilePuzzles
 {
+    /* BLANK TILE CLASS
+     * Last modified by Joe Bevis 13/01/2022
+     ****************************************/
+
+    /// <summary>
+    /// The blank tile is similar to the regular tile but has a blank update and draw method.
+    /// It is primarily used by the tilemanager for the tile swap process.
+    /// </summary>
     public class BlankTile : IGridMember
     {
         public Point CurrentGridPosition { get; set; }

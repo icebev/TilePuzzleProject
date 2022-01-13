@@ -9,8 +9,12 @@ using System.Diagnostics;
 
 namespace AmonkhetTilePuzzles
 {
+    /* TILE GAME CLASS
+     * Last modified by Joe Bevis 13/01/2022
+     ****************************************/
+
     /// <summary>
-    /// This is the main type for your game.
+    /// The main TileGame class - one instance of this will be created when the program begins.
     /// </summary>
     public class TileGame : Game
     {
@@ -24,11 +28,9 @@ namespace AmonkhetTilePuzzles
         // Content member variables
         private List<String> m_puzzleFilenames;
         private List<Texture2D> m_puzzleTextures;
-
         private Texture2D m_titleBackgroundTexture;
         private Texture2D m_puzzleBackgroundTexture;
         private Texture2D m_tileShadowTexture;
-       
         public SpriteFont m_calligraphicFont;
 
         private GameState m_gameState;
@@ -37,16 +39,15 @@ namespace AmonkhetTilePuzzles
         private InterfaceRenderer m_interfaceRenderer;
         private readonly Random m_random;
 
+        // Input device states
         private KeyboardState m_currentKeyboardState;
         private KeyboardState m_previousKeyboardState;
-
         private MouseState m_currentMouseState;
         private MouseState m_previousMouseState;
 
         private int m_tileGridSize = 3;
         private bool m_showNumbers;
         private bool m_showTimer;
-        private bool m_isMuted;
         private HighscoreTracker m_highscoreTracker;
 
         #endregion
@@ -58,43 +59,31 @@ namespace AmonkhetTilePuzzles
         {
             get { return this.m_spriteBatch; }
         }
-
         public int CurrentGridSize
         {
             get { return this.m_tileGridSize; }
             set { this.m_tileGridSize = value; }
         }
-
         public bool ShowTileNumbers
         {
             get { return this.m_showNumbers; }
             set { this.m_showNumbers = value; }
         }
-
         public bool ShowTimer
         {
             get { return this.m_showTimer; }
             set { this.m_showTimer = value; }
         }
-
-        public bool IsMuted
-        {
-            get { return this.m_isMuted; }
-            set { this.m_isMuted = value; }
-        }
-
         public TileManager ActiveTileManager
         {
             get { return this.m_tileManager; }
 
             private set { this.m_tileManager = value; }
         }
-
         public InputManager ActiveInputManager
         {
             get { return this.m_inputManager; }
         } 
-        
         public InterfaceRenderer ActiveInterfaceRenderer
         {
             get { return this.m_interfaceRenderer; }
@@ -104,8 +93,10 @@ namespace AmonkhetTilePuzzles
             get { return this.m_gameState; }
             set { this.m_gameState = value; }
         }
-
-        // Helper property RandomPuzzleTexture selects at random one texture in the puzzleTextures list using the randomizer, for shuffling the displayed puzzle image
+        /// <summary>
+        /// Helper property RandomPuzzleTexture selects at random one texture in the puzzleTextures list using the randomizer
+        /// Used by the random puzzle select button
+        /// </summary>
         public Texture2D RandomPuzzleTexture
         {
             get 
@@ -114,9 +105,7 @@ namespace AmonkhetTilePuzzles
                 return this.m_puzzleTextures[randomInt]; 
             }
         }
-
         public List<Texture2D> PuzzleTextures { get => this.m_puzzleTextures; }
-
         public int WindowWidth
         {
             get 
@@ -133,7 +122,6 @@ namespace AmonkhetTilePuzzles
                 return pixelHeight;
             }
         }
-
         public Point WindowCenter
         {
             get
@@ -142,23 +130,24 @@ namespace AmonkhetTilePuzzles
                 return centerPoint;
             }
         }
-
         public HighscoreTracker ActiveHighscoreTracker { get => this.m_highscoreTracker; }
-
-
-
 
         #endregion
 
-        // Constructor for the TileTestGame class
+        #region Constructor
+        // Constructor for the TileGame class
         public TileGame()
         {
             this.m_graphics = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
             this.m_random = new Random();
+
+            // Begins the game with the welcome animation
             this.ActiveGameState = GameState.AnimatedTitleScreen;
         }
+        #endregion
 
+        #region Class Methods
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -167,9 +156,7 @@ namespace AmonkhetTilePuzzles
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            //this.graphics.IsFullScreen = true;
-            // Sets up the desired window resolution
+            // Sets up the desired window resolution - fullscreen upon game start
             this.m_graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             this.m_graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height; 
             // Allow user to resize the window
@@ -189,36 +176,32 @@ namespace AmonkhetTilePuzzles
             // Create a new SpriteBatch, which can be used to draw textures.
             this.m_spriteBatch = new SpriteBatch(this.GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            // CONTENT LOADING
 
             // Initialize the list of string Filenames - list contains all of the .png image names
+            // These can then be loaded without many lines of repeated code by iterating through the list
             this.m_puzzleFilenames = new List<string> { "accursed", "tinybones", "building", "archfiend", "glorybringer", "kefnet", "mightyleap", "oketra", "sunset" };
             this.m_puzzleTextures = this.LoadTextureList(this.m_puzzleFilenames);
 
-            // Content loading
             this.m_titleBackgroundTexture = this.Content.Load<Texture2D>("textures/backgrounds/titleBackground");
             this.m_puzzleBackgroundTexture = this.Content.Load<Texture2D>("textures/backgrounds/puzzleBackground");
             this.m_tileShadowTexture = this.Content.Load<Texture2D>("textures/shadows/tileShadow");
-            AudioStore.m_tileSlideSFX = this.Content.Load<SoundEffect>("audio/SFX/slide");
-            AudioStore.m_clickOnSFX = this.Content.Load<SoundEffect>("audio/SFX/clickOn");
-            AudioStore.m_clickOffSFX = this.Content.Load<SoundEffect>("audio/SFX/clickOff");
-            AudioStore.m_puzzleCompleteSFX = this.Content.Load<SoundEffect>("audio/SFX/puzzleComplete");
-
-            AudioStore.m_nileJourneyMusic = this.Content.Load<Song>("audio/music/nileJourneyMusicAmbience");
+            
+            AudioStore.LoadAudio(this);
             MediaPlayer.Volume = 0;
-
 
             this.m_calligraphicFont = this.Content.Load<SpriteFont>("fonts/calligraphic");
             this.m_inputManager = new InputManager(this);
             this.m_interfaceRenderer = new InterfaceRenderer(this, this.m_calligraphicFont);
             this.m_interfaceRenderer.LoadTextures();
-            //this.m_buttonManager = new ButtonManager(this);
 
             this.m_highscoreTracker = HighscoreTracker.Load();
-
         }
 
-        // LoadTextureList function takes in a string list and returns a list of loaded Texture2Ds to avoid writing many lines of similar code for loading each texture
+        /// <summary>
+        /// LoadTextureList function takes in a string list and returns a list of loaded Texture2Ds 
+        /// to avoid writing many lines of similar code for loading each texture
+        /// </summary>
         public List<Texture2D> LoadTextureList(List<string> filenames)
         {
             List<Texture2D> textureList = new List<Texture2D>();
@@ -231,7 +214,10 @@ namespace AmonkhetTilePuzzles
             return textureList;
         }
 
-        // SetupTileGrid function creates a new TileManager object with a specified gridSize and puzzle image texture and will be stored in the ActiveTileManager for reference
+        /// <summary>
+        /// SetupTileGrid function creates a new TileManager object with a specified gridSize and puzzle image texture
+        /// will be stored in the ActiveTileManager for reference
+        /// </summary>
         public void SetupTileGrid(Texture2D puzzleImage, int gridSizeOverride = 0)
         {
             if (gridSizeOverride > 1)
@@ -241,8 +227,12 @@ namespace AmonkhetTilePuzzles
             this.ActiveTileManager = new TileManager(this, this.CurrentGridSize, puzzleImage, this.m_calligraphicFont, this.m_tileShadowTexture);
             this.ActiveTileManager.GenerateTiles();
             this.ActiveTileManager.JumbleTiles();
-            //this.ActiveGameState = GameState.PuzzleActive;
         }
+
+        /// <summary>
+        /// Get function for the window scale used for scaling buttons as the window changes size from the original 
+        /// </summary>
+        /// <returns> Outputs a vector with window scale in X and Y </returns>
         public Vector2 GetWindowScaleFactor()
         {
             var scaleFactorX = (float)this.WindowWidth / (float)WINDOW_STARTING_WIDTH;
@@ -255,7 +245,6 @@ namespace AmonkhetTilePuzzles
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
         }
 
         /// <summary>
@@ -270,12 +259,13 @@ namespace AmonkhetTilePuzzles
             this.m_currentMouseState = Mouse.GetState();
             if (this.ActiveGameState != GameState.AnimatedTitleScreen)
             {
-                if (this.IsMuted)
+                if (AudioStore.IsMuted)
                 {
                     MediaPlayer.Volume = 0;
                 }
                 else
                 {
+                    // Will loop the music if it stops playing
                     if (MediaPlayer.State != MediaState.Playing)
                     {
                         MediaPlayer.Play(AudioStore.m_nileJourneyMusic);
@@ -285,11 +275,10 @@ namespace AmonkhetTilePuzzles
                 }
             }
 
-            // TODO: Add your update logic here
+            // Only attempt to update the TileManager if it exists
             if (this.ActiveTileManager != null)
             {
                 this.ActiveTileManager.UpdateTiles(gameTime);
-                //this.ActiveTileManager.CheckPuzzleCompletion();
             }
 
             this.ActiveInputManager.ProcessControls(this.m_previousMouseState, this.m_currentMouseState, 
@@ -297,7 +286,8 @@ namespace AmonkhetTilePuzzles
 
             this.ActiveInterfaceRenderer.UpdateIt(gameTime);
 
-            // Store the input states for reference in the next update method, used to make sure that the keys or mouse cannot be held down to break the game
+            // Store the input states for reference in the next update method,
+            // used to make sure that the keys or mouse cannot be held down to break the game
             this.m_previousKeyboardState = Keyboard.GetState();
             this.m_previousMouseState = Mouse.GetState();
 
@@ -311,8 +301,6 @@ namespace AmonkhetTilePuzzles
         protected override void Draw(GameTime gameTime)
         {
             this.GraphicsDevice.Clear(Color.SandyBrown);
-
-            // TODO: Add your drawing code here
             this.MainSpriteBatch.Begin();
 
             // Draw the correct background based off the state
@@ -321,7 +309,7 @@ namespace AmonkhetTilePuzzles
             else
                 this.MainSpriteBatch.Draw(this.m_puzzleBackgroundTexture, new Rectangle(0, 0, this.WindowWidth, this.WindowHeight), Color.White);
 
-            this.m_interfaceRenderer.DrawInterface(this.MainSpriteBatch);
+            this.ActiveInterfaceRenderer.DrawInterface(this.MainSpriteBatch);
 
             if (this.ActiveGameState == GameState.PuzzleActive)
             { 
@@ -329,12 +317,13 @@ namespace AmonkhetTilePuzzles
                 this.ActiveTileManager.DrawReferenceImage(this.MainSpriteBatch);
             }
 
-            this.m_inputManager.DrawIt(this.MainSpriteBatch);
-
+            // Draws buttons
+            this.ActiveInputManager.DrawIt(this.MainSpriteBatch);
 
             this.MainSpriteBatch.End();
 
             base.Draw(gameTime);
         }
+        #endregion
     }
 }

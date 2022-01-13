@@ -9,8 +9,18 @@ using System.Threading.Tasks;
 
 namespace AmonkhetTilePuzzles
 {
+    /* TILE CLASS
+     * Last modified by Joe Bevis 13/01/2022
+     ****************************************/
+
+    /// <summary>
+    /// Each visible tile in the tile puzzle grid will be a tile object
+    /// Tiles have a correct position stored in addition to current their current position 
+    /// so that they can be checked for puzzle completion
+    /// </summary>
     public class Tile : IGridMember
     {
+        #region Variables
 
         public const int TILE_CONTAINER_PADDING = 20;
         public const int TILE_PADDING = 5;
@@ -19,72 +29,80 @@ namespace AmonkhetTilePuzzles
         public const float ANIMATION_BASE_SPEED = 50f;
         private const float DELTA_MULTIPLIER = 3.5f;
 
+        private const int SHADOW_OFFSET_X = 3;
+        private const int SHADOW_OFFSET_Y = 1;
+
         private SpriteFont m_hintFont;
         private TileGame m_mainGame;
-        private int m_windowWidth;
+        private readonly Texture2D m_puzzleImage;
+        private readonly Texture2D m_tileShadowTexture;
+        
         private int m_windowHeight;
 
+        // Used for the number hints
+        public int m_positionValue;
+
+        private Vector2 m_tileAnimatedDrawPosition;
+
+        #endregion
+
+        #region Properties
+        public TileGame MainGame { get => this.m_mainGame; }
         public int GridStartX
         {
             get
             {
                 int xPaddingPixels = this.m_windowHeight / 8 + TILE_CONTAINER_PADDING;
                 return xPaddingPixels;
-
-            }
-        }
-
-        public int GridStartY
-        {   get
-            {
-                int yPaddingPixels =  this.m_windowHeight / 8 + TILE_CONTAINER_PADDING;
-                return yPaddingPixels;
             }
         }
         public bool IsCurrentlySwappable { get; set; }
-
         public int TileDimension
         {
             get 
             {
-                int shorterSide = (this.m_windowWidth * 2 / 3 < this.m_windowHeight) ? this.m_windowWidth * 3 / 5 : this.m_windowHeight;
-                int containerSize = 3 * shorterSide / 4;
+                // The adjusted size of the UI container is calculated in the interface renderer draw 
+                int containerSize = this.MainGame.ActiveInterfaceRenderer.PuzzleContainerSize;
                 int adjustedContainerSize = containerSize - (this.GridSize * TILE_PADDING) - (2 * TILE_CONTAINER_PADDING);
                 int tileDimensionPixels = adjustedContainerSize / this.GridSize;
                 return tileDimensionPixels;
             }
         }
-        public bool IsInAnimation { get; set; }
         public Point CurrentGridPosition { get; set; }
         public Point CorrectGridPosition { get; set; }
-
-        public int m_positionValue;
         public int GridSize { get; set; }
 
-        private readonly Texture2D m_puzzleImage;
-        private readonly Texture2D m_tileShadowTexture;
-
-        private Vector2 m_tileAnimatedDrawPosition;
+        /* The final draw position is based on the grid location the tile has been set to
+         * The player only sees the tile in this position after the animation is completed
+         * the lag behind the current draw position and final draw position enables the animation
+         ******************************************************************************************/
         public Vector2 TileFinalDrawPosition
         {
             get
             {
                 Vector2 drawTarget = new Vector2(this.GridStartX + (this.CurrentGridPosition.X * (this.TileDimension + TILE_PADDING)),
-                    this.GridStartY + (this.CurrentGridPosition.Y * (this.TileDimension + TILE_PADDING)));
+                    this.GridStartX+ (this.CurrentGridPosition.Y * (this.TileDimension + TILE_PADDING)));
 
                 return drawTarget;
             }
         }
 
+        /// <summary>
+        /// Each tile has bounds based on the final target position
+        /// Used for drawing and detecting tile clicks
+        /// </summary>
         public Rectangle TileBounds
         {
             get
             {
-                Rectangle boundingRectangle = new Rectangle(new Point((int)this.TileFinalDrawPosition.X, (int)this.TileFinalDrawPosition.Y), new Point(this.TileDimension, this.TileDimension));
+                Rectangle boundingRectangle = new Rectangle(new Point((int)this.TileFinalDrawPosition.X, (int)this.TileFinalDrawPosition.Y), 
+                    new Point(this.TileDimension, this.TileDimension));
 
                 return boundingRectangle;
             }
         }
+
+        // Getter that checks the source image for a square
         public int PuzzleImageDimensions
         {
             get 
@@ -96,6 +114,10 @@ namespace AmonkhetTilePuzzles
             }
         }
 
+        /// <summary>
+        /// The texture dimensions divided by the draw grid dimensions gets a scale factor to be used with
+        /// the source rectangles in the draw step to ensure the entire image is drawn
+        /// </summary>
         public float SourceScaleFactor
         {
             get
@@ -103,9 +125,9 @@ namespace AmonkhetTilePuzzles
                 return (float)this.PuzzleImageDimensions / (float)((this.TileDimension + TILE_PADDING) * this.GridSize);
             }
         }
+        #endregion
 
-        public TileGame MainGame { get => this.m_mainGame; }
-
+        #region Constructor
         public Tile(Point correctPosition, int value, Texture2D puzzleImage, int gridSize, SpriteFont hintFont, Texture2D tileshadow, TileGame mainGame)
         {
             this.CorrectGridPosition = correctPosition;
@@ -119,7 +141,13 @@ namespace AmonkhetTilePuzzles
                 
             this.m_tileAnimatedDrawPosition = this.TileFinalDrawPosition;
         }
+        #endregion
 
+        #region Class Methods
+        /// <summary>
+        /// Called during each draw cycle as part of the game loop
+        /// A destination and source rectangle is calculated for the tile texture and shadow
+        /// </summary>
         public void DrawIt(SpriteBatch spriteBatch)
         {
             Rectangle destinationRectangle = new Rectangle(
@@ -135,14 +163,16 @@ namespace AmonkhetTilePuzzles
                 (int)((this.TileDimension) * this.SourceScaleFactor));
 
             Rectangle shadowDestinationRectangle = new Rectangle(
-                (int)this.m_tileAnimatedDrawPosition.X + 3,
-                (int)this.m_tileAnimatedDrawPosition.Y + 3,
-                this.TileDimension + 1,
-                this.TileDimension + 1);
+                (int)this.m_tileAnimatedDrawPosition.X + SHADOW_OFFSET_X,
+                (int)this.m_tileAnimatedDrawPosition.Y + SHADOW_OFFSET_X,
+                this.TileDimension + SHADOW_OFFSET_Y,
+                this.TileDimension + SHADOW_OFFSET_Y);
 
             spriteBatch.Draw(this.m_tileShadowTexture, shadowDestinationRectangle, null, Color.White);
             spriteBatch.Draw(this.m_puzzleImage, destinationRectangle, sourceRectangle, Color.White);
 
+            // The tile value assigned during tile generation is drawn in the center of the tile
+            // It acts as a hint and will be toggled on and off in the options
             if (this.MainGame.ShowTileNumbers)
                 spriteBatch.DrawString(this.m_hintFont, $"{this.m_positionValue}", 
                     new Vector2(this.m_tileAnimatedDrawPosition.X + this.TileDimension / 2 - this.m_hintFont.MeasureString($"{this.m_positionValue}").X / 2,
@@ -150,15 +180,27 @@ namespace AmonkhetTilePuzzles
                     Color.White);
         }
 
+        /// <summary>
+        /// The tile is updated as part of the update loop of the game.
+        /// The windowHeight is updated in case the tiles need to change size with the window.
+        /// The difference between the animated draw position and final draw position decreases:
+        /// this gives the tiles a sliding animated effect.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void UpdateIt(GameTime gameTime)
         {
-            this.m_windowWidth = this.MainGame.WindowWidth;
             this.m_windowHeight = this.MainGame.WindowHeight;
             
             float deltaX = this.m_tileAnimatedDrawPosition.X - this.TileFinalDrawPosition.X;
 
             if (!(Math.Abs(deltaX) <= ANIMATION_TOLERANCE))
             {
+                /* The animation speed boost enables the speed of the animated movement
+                 * to depend on the distance to the target.
+                 * As the tile moves closer to the target position it slows down
+                 * because the deltaX decreases.
+                 *********************************************************************************/
+                
                 float ANIMATION_SPEED_BOOST_X = (float)(Math.Abs(deltaX) * DELTA_MULTIPLIER * gameTime.ElapsedGameTime.TotalSeconds);
 
                 if (deltaX < -ANIMATION_TOLERANCE)
@@ -199,5 +241,7 @@ namespace AmonkhetTilePuzzles
                 this.m_tileAnimatedDrawPosition.Y = this.TileFinalDrawPosition.Y;
             }
         }
+
+        #endregion
     }
 }
