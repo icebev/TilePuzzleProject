@@ -275,12 +275,13 @@ namespace AmonkhetTilePuzzles
                     if (this.MainGame.ActiveTileManager.MoveCount == this.MainGame.ActiveHighscoreTracker.GetBestMoves(currentGridSize, puzzleImageIndex))
                     {
                         spriteBatch.Draw(this.m_trophy, new Rectangle(335, this.BannerYTarget + 250, 100, 120), Color.White);
-                        spriteBatch.DrawString(this.m_calligraphicFont, "New best move count!", new Vector2(445, this.BannerYTarget + 260), Color.White);
+                        spriteBatch.DrawString(this.m_calligraphicFont, "New best move count!", new Vector2(445, this.BannerYTarget + 275), Color.White);
                     }
-                    else if (this.MainGame.ActiveTileManager.TotalSecondsElapsed == this.MainGame.ActiveHighscoreTracker.GetBestTime(currentGridSize, puzzleImageIndex))
+                    
+                    if (this.MainGame.ActiveTileManager.TotalSecondsElapsed == this.MainGame.ActiveHighscoreTracker.GetBestTime(currentGridSize, puzzleImageIndex))
                     { 
                         spriteBatch.Draw(this.m_trophy, new Rectangle(this.MainGame.WindowWidth / 2 + 135, this.BannerYTarget + 250, 100, 120), Color.White);
-                        spriteBatch.DrawString(this.m_calligraphicFont, "New best time!", new Vector2(this.MainGame.WindowWidth / 2 + 245, this.BannerYTarget + 260), Color.White);
+                        spriteBatch.DrawString(this.m_calligraphicFont, "New best time!", new Vector2(this.MainGame.WindowWidth / 2 + 245, this.BannerYTarget + 275), Color.White);
                     }
                 }
             }
