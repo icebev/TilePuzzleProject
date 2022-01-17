@@ -317,8 +317,11 @@ namespace AmonkhetTilePuzzles
                 this.ActiveTileManager.DrawReferenceImage(this.MainSpriteBatch);
             }
 
-            // Draws buttons
+            // Draws buttons on top of most elements
             this.ActiveInputManager.DrawIt(this.MainSpriteBatch);
+
+            if (this.ActiveGameState == GameState.PuzzleSelect)
+                this.ActiveInterfaceRenderer.DrawCompletedTrophies(this.MainSpriteBatch);
 
             this.MainSpriteBatch.End();
 

@@ -224,15 +224,18 @@ namespace AmonkhetTilePuzzles
                 string text = "Puzzle Select";
                 spriteBatch.DrawString(this.m_calligraphicFont, text, new Vector2((this.MainGame.WindowWidth / 2 - (int)(this.m_calligraphicFont.MeasureString(text).X * 0.5)), 150), Color.White);
 
+                bool noHovering = true;
                 // Highscore display upon puzzle image button hover
                 foreach (Button puzzleImageButton in this.MainGame.ActiveInputManager.ActiveButtonManager.ImageSelectButtons)
                 {
+                    int puzzleImageIndex = this.MainGame.ActiveInputManager.ActiveButtonManager.ImageSelectButtons.IndexOf(puzzleImageButton);
+                    int currentGridSize = this.MainGame.CurrentGridSize;
+                    bool hasScoreSet = (this.MainGame.ActiveHighscoreTracker.GetRelevantEntries(currentGridSize, puzzleImageIndex).Count > 0);
+                    
                     if (puzzleImageButton.IsHover)
                     {
-                        int puzzleImageIndex = this.MainGame.ActiveInputManager.ActiveButtonManager.ImageSelectButtons.IndexOf(puzzleImageButton);
-                        int currentGridSize = this.MainGame.CurrentGridSize;
+                        noHovering = false;
 
-                        bool hasScoreSet = (this.MainGame.ActiveHighscoreTracker.GetRelevantEntries(currentGridSize, puzzleImageIndex).Count > 0);
                         string scoreToDisplay;
                         string timeToDisplay;
 
@@ -253,6 +256,12 @@ namespace AmonkhetTilePuzzles
 
                         spriteBatch.DrawString(this.m_calligraphicFont, timeToDisplay , new Vector2(this.MainGame.WindowCenter.X + 20 + this.MainGame.WindowHeight * 6 / 16, this.MainGame.WindowHeight / 8 + 375), Color.White);
                     }
+                }
+
+                if (noHovering)
+                {
+                    spriteBatch.DrawString(this.m_calligraphicFont, "Hover over \na puzzle \nto see the \nbest scores.", new Vector2(this.MainGame.WindowCenter.X + 20 + this.MainGame.WindowHeight * 6 / 16, this.MainGame.WindowHeight / 8 + 275), Color.White);
+
                 }
             }
             
@@ -301,6 +310,24 @@ namespace AmonkhetTilePuzzles
                     Vector2 scale = new Vector2(0.5f, 0.5f) * scaleMultiplier;
                     spriteBatch.Draw(this.m_instructions, position, null, Color.White, 0, origin, scale, SpriteEffects.None, 1.0f);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Draw a little trophy on top of completed puzzles.
+        /// Separate method needs to be called last in the draw cycle to appear on top of the buttons.
+        /// </summary>
+
+        public void DrawCompletedTrophies(SpriteBatch spriteBatch)
+        {
+            foreach (Button puzzleImageButton in this.MainGame.ActiveInputManager.ActiveButtonManager.ImageSelectButtons)
+            {
+                int puzzleImageIndex = this.MainGame.ActiveInputManager.ActiveButtonManager.ImageSelectButtons.IndexOf(puzzleImageButton);
+                int currentGridSize = this.MainGame.CurrentGridSize;
+                bool hasScoreSet = (this.MainGame.ActiveHighscoreTracker.GetRelevantEntries(currentGridSize, puzzleImageIndex).Count > 0);
+                if (hasScoreSet)
+                    spriteBatch.Draw(this.m_trophy, new Rectangle(puzzleImageButton.ButtonBounds.X + puzzleImageButton.ButtonBounds.Width - 55, puzzleImageButton.ButtonBounds.Y + puzzleImageButton.ButtonBounds.Height -55, 65, 65), Color.White);
+
             }
         }
 
