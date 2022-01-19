@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace AmonkhetTilePuzzles
 {
     /* INTERFACE RENDERER
-     * Last modified by Joe Bevis 13/01/2022
+     * Last modified by Joe Bevis 18/01/2022
      ****************************************/
 
     /// <summary>

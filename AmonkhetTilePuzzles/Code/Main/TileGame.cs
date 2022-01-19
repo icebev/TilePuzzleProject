@@ -10,7 +10,7 @@ using System.Diagnostics;
 namespace AmonkhetTilePuzzles
 {
     /* TILE GAME CLASS
-     * Last modified by Joe Bevis 13/01/2022
+     * Last modified by Joe Bevis 18/01/2022
      ****************************************/
 
     /// <summary>

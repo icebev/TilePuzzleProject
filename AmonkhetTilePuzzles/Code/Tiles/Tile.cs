@@ -45,10 +45,10 @@ namespace AmonkhetTilePuzzles
         private Vector2 m_tileAnimatedDrawPosition;
 
         #endregion
-
+        
         #region Properties
         public TileGame MainGame { get => this.m_mainGame; }
-        public int GridStartX
+        public int GridStartXY
         {
             get
             {
@@ -68,6 +68,8 @@ namespace AmonkhetTilePuzzles
                 return tileDimensionPixels;
             }
         }
+
+        // The point x and y values represent the position in the tiles array, not a pixel position
         public Point CurrentGridPosition { get; set; }
         public Point CorrectGridPosition { get; set; }
         public int GridSize { get; set; }
@@ -80,8 +82,8 @@ namespace AmonkhetTilePuzzles
         {
             get
             {
-                Vector2 drawTarget = new Vector2(this.GridStartX + (this.CurrentGridPosition.X * (this.TileDimension + TILE_PADDING)),
-                    this.GridStartX+ (this.CurrentGridPosition.Y * (this.TileDimension + TILE_PADDING)));
+                Vector2 drawTarget = new Vector2(this.GridStartXY + (this.CurrentGridPosition.X * (this.TileDimension + TILE_PADDING)),
+                    this.GridStartXY + (this.CurrentGridPosition.Y * (this.TileDimension + TILE_PADDING)));
 
                 return drawTarget;
             }
@@ -156,6 +158,7 @@ namespace AmonkhetTilePuzzles
                 this.TileDimension, 
                 this.TileDimension);
 
+            // Crops the source image to show the allocated part on the tile, using the scale factor
             Rectangle sourceRectangle = new Rectangle(
                 (int)(this.CorrectGridPosition.X * (this.TileDimension * this.SourceScaleFactor + TILE_PADDING)), 
                 (int)(this.CorrectGridPosition.Y * (this.TileDimension * this.SourceScaleFactor + TILE_PADDING)), 
